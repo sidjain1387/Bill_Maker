@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="/styles/style.css">
+  </head>
+  <body>
+    <page size="A4" id="content">
+      <div class="sec-1">
+        <h5>PAN : AACFD8928</h5>
+        <div class="sec-1-1">
+          <h5 class="sec-1-1-h3-top">Tax Invoice / Bill of Supply</h5>
+          <h5 class="sec-1-1-h3-bottom">(U/s 31 Read with Rule-)</h5>
+        </div>
+        <div class="sec-1-2">
+          <h5 class="sec-1-2-h3-top">Original For Receipient</h5>
+          <h5 class="sec-1-2-h3-bottom">Duplicate for Record</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="sec-2">
+        <h2>DREAM VISION HOLIDAYS</h2>
+        <h5>
+          GF-11, II-A/19, Nehru Nagar, Near Jain Mandir Flyover, Amar Ujala
+          Building, Ghaziabad-201001 (U.P)
+        </h5>
+        <h5>
+          Tel : 0120-2795443 / 4152795 &nbsp;&nbsp;&nbsp; Mob : 9350707095 /
+          9873207095 &nbsp;&nbsp;&nbsp; Fax : 2795443
+        </h5>
+        <h5>
+          E-mail : info@dreamvisionindia.com &nbsp;&nbsp;&nbsp; Website :
+          www.dreamvisionindia.com
+        </h5>
+        <h5>GSTIN NO. : 09AACFD8928N1ZT</h5>
+      </div>
+      <hr />
+      <div class="sec-3">
+        <div class="sec-3-grid-item" style="text-align: center">
+          Receipient Details
+        </div>
+        <div class="sec-3-grid-item">Invoice No:</div>
+        <div class="sec-3-grid-item" style="font-weight: bold"><%=billno%></div>
+        <div class="sec-3-grid-item">Name: <%=customer.customer_name%></div>
+        <div class="sec-3-grid-item">Tax Invoice Date:</div>
+        <div class="sec-3-grid-item"><%=date%></div>
+        <div class="sec-3-grid-item" style="grid-row: 3/6">Address: <%=customer.customer_address%></div>
+        <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
+          Address of Delivery: <%=customer.customer_address%>
+        </div>
+        <div class="sec-3-grid-item">State: <%=customer.customer_state%></div>
+        <div class="sec-3-grid-item">Code <%=customer.customer_state_code%>:</div>
+        <div class="sec-3-grid-item">
+          State: <%=customer.customer_state%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           Code:<%=customer.customer_state_code%>
+        </div>
+        <div class="sec-3-grid-item" style="grid-column: 2/4">GSTIN : <%=customer.customer_gstin%></div>
+        <div class="sec-3-grid-item">GSTIN : <%=customer.customer_gstin%></div>
+        <div class="sec-3-grid-item">Tax is payable on Reverse Charge</div>
+        <div class="sec-3-grid-item">Six</div>
+      </div>
+      <div class="sec-4">
+        <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">SNo.</th>
+                  <th scope="col">Description Of Services</th>
+                  <th scope="col">SAC Code</th>
+                  <th scope="col">Qty/Unit</th>
+                  <th scope="col">Rate</th>
+                  <th scope="col">Total Value</th>
+              </tr>
+          </thead>
+          <tbody>
+            <% let total=0;%>
+              <% air_ticket.forEach(function(ticket) { %>
+                  <tr>
+                    <td><%=locals.sno%></td>
+                    <td><%=ticket.air_ticket_customer_name%></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><%=ticket.flight_travel_location%> <%=ticket.flight_number%></td>
+                    <td><%=ticket.flight_sac_code%></td>
+                    <td><%=ticket.flight_quantity%></td>
+                    <td>₹<%=ticket.flight_rate%></td>
+                    <td>₹<%= ticket.flight_quantity * ticket.flight_rate  %></td>
+                    <%total=total+parseInt((ticket.flight_quantity) * (ticket.flight_rate)) %>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><%=ticket.flight_date%> <%=ticket.flight_time%> <%=ticket.flight_pnr%></td>
+                  </tr>
+                  <tr>
+                    <td> &nbsp; &nbsp;&nbsp;</td>
+                    <td>&nbsp;&nbsp;&nbsp;</td>
+                  </tr>
+
+                  <% sno++; %>
+              <%});%>
+              <tr>
+                <td><%=locals.sno%></td>
+                <td>Service Charge</td>
+                <td></td>
+                <td><%=service_charge_quantity%></td>
+                <td>₹<%=service_charge_rate%></td>
+                <td>₹<%=service_charge%></td>
+                <%total=parseInt(total)+parseInt(service_charge)%>
+              </tr>
+          </tbody>
+      </table>
+      </div>
+
+      <div class="sec-5">
+        <div class="sec-5-grid-item">Bank Details :</div>
+        <div class="sec-5-grid-item">SGST @ 9%</div>
+        <div class="sec-5-grid-item">₹<%=service_charge*0.09%></div>
+        <%total=parseInt(total)+parseInt(parseInt(service_charge)*0.09)%>
+        <div class="sec-5-grid-item">Dream Vision Holidays</div>
+        <div class="sec-5-grid-item">CGST @ 9%</div>
+        <div class="sec-5-grid-item">₹<%=service_charge*0.09%></div>
+        <%total=parseInt(total)+parseInt(parseInt(service_charge)*0.09)%>
+
+        <div class="sec-5-grid-item">
+            <div style="display: flex; flex-direction: column;">
+                <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
+                <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+            </div>
+        </div>
+        <div class="sec-5-grid-item">IGST @ 18%</div>
+        <div class="sec-5-grid-item">-</div>
+        <div class="sec-5-grid-item" style="grid-row: 4/6;" id="amount">Amount in Words : </div>
+        <div class="sec-5-grid-item">Total : </div>
+        <div class="sec-5-grid-item" id="total_value"><%=total%></div>
+        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">For DREAM VISION HOLIDAYS Authority Signature</div>
+        <div class="sec-5-grid-item">
+            <div style="display: flex; flex-direction: column;">
+                <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
+                <ul style="margin-top: 0; margin-bottom: 0;">
+                    <li>Subject to Ghaziabad Jurisdiction</li>
+                    <li>Interest @ 21% p.a. will be charged if the bill is not paid within 7 days of presentation</li>
+                </ul>
+            </div>
+        </div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
+      </div>
+    </page>
+    <button id="download">Download PDF</button>
+    <script>
+      document
+        .getElementById("download")
+        .addEventListener("click", function () {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF("p", "mm", "a4"); // Use 'p' for portrait orientation
+
+          html2canvas(document.getElementById("content"), {
+            useCORS: true,
+            scale: 2, // Improve the resolution
+          }).then((canvas) => {
+            const imgData = canvas.toDataURL("image/png");
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+            doc.save("a4.pdf");
+          });
+        });
+
+        let total=document.getElementById("total_value").innerText;
+        let array1=["Zero", 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+        let amount_in_words="";
+        for (let i=0;i<total.length;i++){
+          if(i==total.length-1){
+            amount_in_words+=(array1[parseInt(total[i])]+" Rupees only");
+            break;
+          }
+          amount_in_words+=(array1[parseInt(total[i])]+"/");
+        }
+        document.getElementById("amount").innerText=amount_in_words;
+    </script>
+  </body>
+</html>
