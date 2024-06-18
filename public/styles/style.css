@@ -83,7 +83,9 @@ hr {
 }
 
 .table{
-    width: 21cm;
+    width: 20cm;
+    margin-left: 10px;
+    margin-right: 10px;
 
 }
 table, th, td {

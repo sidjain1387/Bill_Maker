@@ -38,9 +38,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     <% hotel_booking.forEach(function(booking) { %>
                         <tr>
-                            <th scope="row"><input type="checkbox" id="<%=booking.hotel_booking_id%>" name="hotel_booking" value="<%=booking.hotel_booking_id%>"/>
+                            <th scope="row"><input type="checkbox" id="<%=booking.hotel_booking_id%>" name="selected_bookings" value="<%=booking.hotel_booking_id%>"/>
                             </th>
                             <td><%=booking.hotel_booking_customer_name%></td>
                             <td><%=booking.hotel_name%></td>
@@ -58,9 +59,17 @@
             <br>
             <div class="col-md-4">
                 <label for="inputEmail4" class="form-label">Service Charge(amount)</label>
-                <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_service_charge">
+                <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_rate">
             </div>
-            <br>
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Service Charge Quantity</label>
+                <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_quantity">
+            </div>
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">SAC CODE</label>
+                <input type="number" class="form-control border border-success" id="inputEmail4" value="00440063" name="sac_code_original">
+            </div>
+            
             <input type="submit" name="add" value="Submit" id="tab">
         </form>
         <br>
@@ -68,4 +77,6 @@
 
     </div> 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </html>
