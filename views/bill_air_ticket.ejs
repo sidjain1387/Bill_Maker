@@ -103,10 +103,10 @@
                 <td><%=locals.sno%></td>
                 <td>Service Charge</td>
                 <td></td>
-                <td><%=service_charge_quantity%></td>
-                <td>₹<%=service_charge_rate%></td>
-                <td>₹<%=service_charge%></td>
-                <%total=parseInt(total)+parseInt(service_charge)%>
+                <td><%=final_service_charge_quantity%></td>
+                <td>₹<%=final_service_charge_rate%></td>
+                <td>₹<%=final_service_charge%></td>
+                <%total=parseInt(total)+parseInt(final_service_charge)%>
               </tr>
           </tbody>
       </table>
@@ -116,12 +116,12 @@
         <div class="sec-5-grid-item">Bank Details :</div>
         <%if(customer.customer_state_code==9){%>
           <div class="sec-5-grid-item">SGST @ 9%</div>
-          <div class="sec-5-grid-item">₹<%=service_charge*0.09%></div>
-          <%total=parseInt(total)+parseInt(parseInt(service_charge)*0.09)%>
+          <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
+          <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
           <div class="sec-5-grid-item">Dream Vision Holidays</div>
           <div class="sec-5-grid-item">CGST @ 9%</div>
-          <div class="sec-5-grid-item">₹<%=service_charge*0.09%></div>
-          <%total=parseInt(total)+parseInt(parseInt(service_charge)*0.09)%>
+          <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
+          <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
           <div class="sec-5-grid-item">
               <div style="display: flex; flex-direction: column;">
                   <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
@@ -144,15 +144,15 @@
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 18%</div>
-            <div class="sec-5-grid-item">₹<%=service_charge*0.18%></div>
-            <%total=parseInt(total)+parseInt(parseInt(service_charge)*0.18)%>
+            <div class="sec-5-grid-item">₹<%=final_service_charge*0.18%></div>
+            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.18)%>
 
 
         <%}%>
         <div class="sec-5-grid-item" style="grid-row: 4/6.5;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
         <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
-        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">This is a computer generated bill</div>
+        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">This is a computer generated e-bill</div>
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
                 <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
@@ -181,6 +181,7 @@
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+            
             doc.save("a4.pdf");
           });
         });
