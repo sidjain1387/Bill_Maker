@@ -231,7 +231,7 @@
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            doc.save("a4.pdf");
+            doc.save("a4"+"<%=billno%>"+".pdf");
           });
         });
         let total=document.getElementById("total_value").innerText;

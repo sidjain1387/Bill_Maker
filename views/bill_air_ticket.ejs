@@ -175,7 +175,7 @@
 
           html2canvas(document.getElementById("content"), {
             useCORS: true,
-            scale: 5, // Improve the resolution
+            scale: 2, // Improve the resolution
           }).then((canvas) => {
             const imgData = canvas.toDataURL("image/png");
             const imgWidth = 210; // A4 width in mm
