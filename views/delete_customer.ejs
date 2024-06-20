@@ -10,23 +10,24 @@
 <body>
   <%-include("partials/header.ejs")%>
   <div class="container">
+    <%if(locals.delete_cus==1){%>
+        <h3>Customer Cannot be deleted</h3>
+    <%}else if(locals.delete_cus==0){%>
+        <h3></h3>
+    <%}else{%>
+        <h3>Customer Deleted</h3>
+    <%}%>
 
     
-    <form class="row g-3" method="post" action="/prebill">
-      <div class="col-md-4">
-          <label for="inputEmail4" class="form-label">Bill No.</label>
-          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_id">
-        </div>
+    <form class="row g-3" method="post" action="/delete_selected_biller">
+
+      
         <div class="col-md-4">
           <label for="inputEmail4" class="form-label">Biller id</label>
-          <input type="text" class="form-control border border-success" id="inputEmail4" name="customer_id">
-        </div>
-        <div class="col-md-4">
-          <label for="inputEmail4" class="form-label">Enter <b>1</b> -Air ticket Bill & <b>2</b> -Hotel Booking Bill</label>
-          <input type="text" class="form-control border border-success" id="inputEmail4" name="choice">
+          <input type="number" class="form-control border border-success" id="inputEmail4" name="customer_id">
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary">ADD</button>
+          <button type="submit" class="btn btn-primary">DELETE</button>
         </div>
       </form>
       
@@ -35,8 +36,11 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Biller Id</th>
-            <th scope="col">Biller Name</th>
+            <th scope="col">Customer Id</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Customer Address</th>
+            <th scope="col">Customer GSTIN</th>
+            <th scope="col">Customer State</th>
           </tr>
         </thead>
         <tbody>
@@ -44,6 +48,9 @@
             <tr>
               <th scope="row"><%=customer.customer_id%></th>
               <td><%=customer.customer_name%></td>
+              <td><%=customer.customer_address%></td>
+              <td><%=customer.customer_gstin%></td>
+              <td><%=customer.customer_state%></td>
             </tr>
             <%});%>
           </tbody>

@@ -23,7 +23,7 @@ const db=new pg.Client({
 db.connect();
 
 async function customers(){
-    const result=await db.query("SELECT customer_id,customer_name FROM customer_info");
+    const result=await db.query("SELECT customer_id,customer_name FROM customer_info order by customer_id desc;");
     return result.rows;
 }
 
@@ -58,10 +58,54 @@ app.get("/preprebill",async(req,res)=>{
 });
 
 app.get("/all_bill_list",async(req,res)=>{
-    let bills=await db.query("SELECT * FROM bill_info");
+    let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
     let all_customers=await db.query("SELECT * FROM customer_info");
     res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows});
 })
+
+app.get("/customer_list",async (req,res)=>{
+    let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
+    res.render("customer_list.ejs",{customer:customers.rows});
+})
+
+app.get("/delete_customer",async(req,res)=>{
+    let customers=await db.query("SELECT * FROM customer_info order by customer_id desc");
+    let delete_cus=0;
+    res.render("delete_customer.ejs",{customer:customers.rows,delete_cus:delete_cus});
+})
+
+app.get("/delete_air_ticket",async(req,res)=>{
+    let air_tickets=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
+    let delete_air=0;
+    res.render("delete_air_ticket.ejs",{air_ticket:air_tickets.rows,delete_air:delete_air});
+})
+
+app.get("/air_ticket_list",async(req,res)=>{
+    let air_ticket=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
+    res.render("air_ticket_list.ejs",{air_ticket:air_ticket.rows});
+
+})
+
+app.get("/hotel_booking_list",async(req,res)=>{
+    let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
+    res.render("hotel_booking_list.ejs",{hotel_booking:hotel_booking.rows});
+})
+
+app.get("/delete_hotel_booking",async(req,res)=>{
+    let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc");
+    let delete_hotel=0;
+
+    res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,delete_hotel:delete_hotel});
+})
+
+app.get("/delete_bill",async(req,res)=>{
+    let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
+    const customer= await customers();
+    let delete_bill=0;
+    res.render("delete_bill.ejs",{bill:bill.rows,customers:customer,delete_bill:delete_bill});
+})
+
+
 
 let currentbillno=0;
 let currentbillerid=0;
@@ -314,38 +358,116 @@ app.post("/bill_air",async(req,res)=>{
 })
 
 app.post("/selected_hotel_bill",async (req,res)=>{
-    let selected_final_bill_id=req.body.bill_id;
-    let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-    let final_hotel_booking=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-    let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+    try{
 
-    console.log("/selected_hotel_bill bill id is ",selected_final_bill_id);
-    res.render("bill_hotel.ejs",{final_final_hotel_booking:final_hotel_booking.rows,
-        customer:current_customer.rows[0],
-        sno:1,
-        billno:final_bills.rows[0].bill_id,
-        date:final_bills.rows[0].bill_date,
-        final_sac_code:final_bills.rows[0].bill_sac_code,
-        final_service_charge:final_bills.rows[0].bill_service_charge,
-        final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
-        final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+        let selected_final_bill_id=req.body.bill_id;
+        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let final_hotel_booking=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        
+        console.log("/selected_hotel_bill bill id is ",selected_final_bill_id);
+        res.render("bill_hotel.ejs",{final_final_hotel_booking:final_hotel_booking.rows,
+            customer:current_customer.rows[0],
+            sno:1,
+            billno:selected_final_bill_id,
+            date:final_bills.rows[0].bill_date,
+            final_sac_code:final_bills.rows[0].bill_sac_code,
+            final_service_charge:final_bills.rows[0].bill_service_charge,
+            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
+            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+    }
+    catch(err){
+        let why_not_bill=1;
+        let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
+        let all_customers=await db.query("SELECT * FROM customer_info");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,why_not_bill:why_not_bill});
+    }
 })
 app.post("/selected_air_bill",async (req,res)=>{
-    let selected_final_bill_id=req.body.bill_id;
-    let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-    let final_air_ticket=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-    let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-    
-    res.render("bill_air_ticket.ejs",{air_ticket:final_air_ticket.rows,
-        customer:current_customer.rows[0],
-        sno:1,
-        billno:final_bills.rows[0].bill_id,
-        date:final_bills.rows[0].bill_date,
-        final_service_charge:final_bills.rows[0].bill_service_charge,
-        final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
-        final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+    try{
+
+        let selected_final_bill_id=req.body.bill_id;
+        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let final_air_ticket=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        
+        res.render("bill_air_ticket.ejs",{air_ticket:final_air_ticket.rows,
+            customer:current_customer.rows[0],
+            sno:1,
+            billno:selected_final_bill_id,
+            date:final_bills.rows[0].bill_date,
+            final_service_charge:final_bills.rows[0].bill_service_charge,
+            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
+            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+    }
+    catch(err){
+        let why_not_bill=1;
+        let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
+        let all_customers=await db.query("SELECT * FROM customer_info");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,why_not_bill:why_not_bill});
+    }
 
 })
+
+app.post("/delete_selected_biller",async(req,res)=>{
+    let customer_id=req.body.customer_id;
+    try{
+        await db.query("DELETE FROM customer_info WHERE customer_id=$1;",[parseInt(customer_id)]);
+        let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
+        res.render("delete_customer.ejs",{customer:customers.rows});
+    }
+    catch(err){
+        let delete_cus=1;
+        let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
+        res.render("delete_customer.ejs",{customer:customers.rows,delete_cus:delete_cus});
+    }
+
+})
+
+app.post("/delete_selected_air_ticket",async(req,res)=>{
+    let air_ticket_id=req.body.air_ticket_id;
+    try{
+        await db.query("DELETE FROM air_ticket WHERE air_ticket_id=$1;",[parseInt(air_ticket_id)]);
+        let air_ticket=await db.query("SELECT * FROM air_ticket;");
+        res.render("delete_air_ticket.ejs",{air_ticket:air_ticket.rows});
+    }
+    catch(err){
+        let delete_air=1;
+        let air_ticket=await db.query("SELECT * FROM air_ticket;");
+        res.render("delete_air_ticket.ejs",{air_ticket:air_ticket.rows,delete_air:delete_air});
+    }
+})
+
+
+app.post("/delete_selected_hotel_booking",async(req,res)=>{
+    let hotel_booking_id=req.body.hotel_booking_id;
+    try{
+        await db.query("DELETE FROM hotel_booking WHERE hotel_booking_id=$1;",[parseInt(hotel_booking_id)]);
+        let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
+        res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows});
+    }
+    catch(err){
+        let delete_hotel=1;
+        let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
+        res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,delete_hotel:delete_hotel});
+    }
+})
+
+app.post("/delete_selected_bill",async(req,res)=>{
+    let bill_id=req.body.bill_id;
+    const customer= await customers();
+    try{
+        await db.query("DELETE FROM bill_info WHERE bill_id=$1;",[parseInt(bill_id)]);
+        let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
+        res.render("delete_bill.ejs",{bill:bill.rows,customers:customer});
+    }
+    catch(err){
+        let delete_hotel=1;
+        let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
+        res.render("delete_bill.ejs",{bill:bill.rows,customers:customer});
+    }    
+})
+
 
 
 app.listen(3000,()=>{
