@@ -27,12 +27,12 @@ async function customers(){
     return result.rows;
 }
 
-async function date_now(){
+async function date_now() {
     let now = new Date();
     let day = String(now.getDate()).padStart(2, '0');
-    let month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    let month = String(now.getMonth() + 1).padStart(2, '0');
     let year = now.getFullYear();
-    let formattedDate = `${day}/${month}/${year}`;
+    let formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
 }
 
@@ -57,11 +57,14 @@ app.get("/preprebill",async(req,res)=>{
     res.render("preprebill.ejs",{customer:customer});
 });
 
-app.get("/all_bill_list",async(req,res)=>{
-    let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
-    let all_customers=await db.query("SELECT * FROM customer_info");
-    res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows});
+app.get("/selected_bill_list",async(req,res)=>{
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+    let bill_status=2;
+    res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
 })
+
+
+
 
 app.get("/customer_list",async (req,res)=>{
     let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
@@ -104,6 +107,7 @@ app.get("/delete_bill",async(req,res)=>{
     let delete_bill=0;
     res.render("delete_bill.ejs",{bill:bill.rows,customers:customer,delete_bill:delete_bill});
 })
+
 
 
 
@@ -357,57 +361,7 @@ app.post("/bill_air",async(req,res)=>{
             final_service_charge_rate:service_charge_rate});
 })
 
-app.post("/selected_hotel_bill",async (req,res)=>{
-    try{
 
-        let selected_final_bill_id=req.body.bill_id;
-        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        let final_hotel_booking=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        
-        console.log("/selected_hotel_bill bill id is ",selected_final_bill_id);
-        res.render("bill_hotel.ejs",{final_final_hotel_booking:final_hotel_booking.rows,
-            customer:current_customer.rows[0],
-            sno:1,
-            billno:selected_final_bill_id,
-            date:final_bills.rows[0].bill_date,
-            final_sac_code:final_bills.rows[0].bill_sac_code,
-            final_service_charge:final_bills.rows[0].bill_service_charge,
-            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
-            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
-    }
-    catch(err){
-        let why_not_bill=1;
-        let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
-        let all_customers=await db.query("SELECT * FROM customer_info");
-        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,why_not_bill:why_not_bill});
-    }
-})
-app.post("/selected_air_bill",async (req,res)=>{
-    try{
-
-        let selected_final_bill_id=req.body.bill_id;
-        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        let final_air_ticket=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        
-        res.render("bill_air_ticket.ejs",{air_ticket:final_air_ticket.rows,
-            customer:current_customer.rows[0],
-            sno:1,
-            billno:selected_final_bill_id,
-            date:final_bills.rows[0].bill_date,
-            final_service_charge:final_bills.rows[0].bill_service_charge,
-            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
-            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
-    }
-    catch(err){
-        let why_not_bill=1;
-        let bills=await db.query("SELECT * FROM bill_info order by bill_id desc;");
-        let all_customers=await db.query("SELECT * FROM customer_info");
-        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,why_not_bill:why_not_bill});
-    }
-
-})
 
 app.post("/delete_selected_biller",async(req,res)=>{
     let customer_id=req.body.customer_id;
@@ -468,7 +422,94 @@ app.post("/delete_selected_bill",async(req,res)=>{
     }    
 })
 
+let selected_customer_id=0;
+let date_from="";
+let date_to="";
 
+app.post("/final_selected_bill_list",async(req,res)=>{
+    selected_customer_id=req.body.selected_customer_id;
+    date_from=req.body.date_from;
+    date_to=req.body.date_to;
+
+    try{
+        let bill_status=1;
+        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+    }catch(err){
+        let bill_status=0;
+        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+        res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+
+    }
+})
+
+app.get("/return_final_selected_bill_list",async(req,res)=>{
+    try{
+        let bill_status=1;
+        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+    }catch(err){
+        console.log(err);
+        let bill_status=0;
+        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+        res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+
+    }
+})
+
+app.post("/selected_air_bill",async (req,res)=>{
+    try{
+
+        let selected_final_bill_id=req.body.bill_id;
+        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let final_air_ticket=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        
+        res.render("bill_air_ticket.ejs",{air_ticket:final_air_ticket.rows,
+            customer:current_customer.rows[0],
+            sno:1,
+            billno:selected_final_bill_id,
+            date:final_bills.rows[0].bill_date.toLocaleDateString(),
+            final_service_charge:final_bills.rows[0].bill_service_charge,
+            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
+            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+    }
+    catch(err){
+        let bill_status=0;
+        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+        let all_customers=await db.query("SELECT * FROM customer_info");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+    }
+
+})
+
+app.post("/selected_hotel_bill",async (req,res)=>{
+    try{
+
+        let selected_final_bill_id=req.body.bill_id;
+        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let final_hotel_booking=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        
+        res.render("bill_hotel.ejs",{final_final_hotel_booking:final_hotel_booking.rows,
+            customer:current_customer.rows[0],
+            sno:1,
+            billno:selected_final_bill_id,
+            date:final_bills.rows[0].bill_date.toLocaleDateString(),
+            final_sac_code:final_bills.rows[0].bill_sac_code,
+            final_service_charge:final_bills.rows[0].bill_service_charge,
+            final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
+            final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
+    }
+    catch(err){
+        let bill_status=0;
+        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+        let all_customers=await db.query("SELECT * FROM customer_info");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+    }
+})
 
 app.listen(3000,()=>{
     console.log("Server is running on port 3000");

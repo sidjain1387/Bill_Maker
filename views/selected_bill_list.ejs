@@ -9,13 +9,13 @@
 <body>
     <%-include("partials/header.ejs")%>
     <div class="container">
-      <%if(locals.bill_status==1){%>
-        <h3>Bill List is declared</h3>
-      <%}else if(locals.bill_status==0){%>
-          <h3>Bill List cannot be shown</h3>
-      <%}else{%>
-        <h3>Bill List is empty</h3>
-      <%}%>
+        <%if(locals.bill_status==1){%>
+            <h3>Bill List is declared</h3>
+        <%}else if(locals.bill_status==0){%>
+              <h3>Bill List cannot be shown</h3>
+        <%}else{%>
+            <h3>Bill List</h3>
+        <%}%>
         <form class="row g-3" method="post" action="/final_selected_bill_list">
             <div class="col-md-2">
                 <label for="inputEmail4" class="form-label">Customer ID</label>
@@ -23,11 +23,11 @@
               </div>
               <div class="col-md-2">
                 <label for="inputEmail4" class="form-label">Date From</label>
-                <input type="date" class="form-control border border-success" id="inputEmail4" name="date_from">
+                <input type="text" class="form-control border border-success" id="inputEmail4" name="">
               </div>
               <div class="col-md-2">
                 <label for="inputEmail4" class="form-label">Date To</label>
-                <input type="date" class="form-control border border-success" id="inputEmail4" name="date_to">
+                <input type="text" class="form-control border border-success" id="inputEmail4" name="">
               </div>
               <table class="table table-sm table-dark table-bordered table-hover border border-primary">
                 <thead class="w-25">

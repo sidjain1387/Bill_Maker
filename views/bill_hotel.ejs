@@ -8,7 +8,7 @@
   <body>
     <div style="display: flex;justify-content: center; padding: 10px 10px;">
       <button id="download" style="font-weight: 600; font-size: larger;background-color: aqua;">Download PDF</button>
-      <a href="/"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return to Home</button></a>
+      <a href="/return_final_selected_bill_list"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return</button></a>
     </div>
     <page size="A4" id="content">
       <div class="sec-1">
@@ -121,9 +121,7 @@
       <div class="sec-5">
         <div class="sec-5-grid-item">Bank Details :</div>
         <%if(customer.customer_state_code==9){%>
-          <%console.log("if(customer.customer_state_code==9) is true")%>
           <%if(final_sac_code==440063){%>
-            <%console.log("if(final_sac_code==440063) is true")%>
 
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
             <div class="sec-5-grid-item">₹<%=hotel_total*0.025%></div>
@@ -141,7 +139,6 @@
             <div class="sec-5-grid-item">IGST @ 5%</div>
             <div class="sec-5-grid-item">-</div>
           <%}else{%>
-            <%console.log("if(customer.customer_state_code==9)else is true")%>
 
             <div class="sec-5-grid-item">SGST @ 9%</div>
             <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
@@ -160,10 +157,8 @@
             <div class="sec-5-grid-item">-</div>
 
         <%}}else{%>
-          <%console.log("else(customer.customer_state_code==9) is true")%>
 
           <%if(final_sac_code==440063){%>
-            <%console.log("else(customer.customer_state_code==9)if(final_sac_code==440063) is true")%>
 
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
@@ -181,7 +176,6 @@
             <div class="sec-5-grid-item">IGST @ 5%</div>
             <div class="sec-5-grid-item">₹<%=hotel_total*0.05%></div>
           <%}else{%>
-            <%console.log("if(customer.customer_state_code==9)else(final_sac_code==440063) is true")%>
 
             <div class="sec-5-grid-item">SGST @ 9%</div>
             <div class="sec-5-grid-item">-</div>
