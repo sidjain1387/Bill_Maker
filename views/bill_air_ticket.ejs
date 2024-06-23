@@ -12,7 +12,7 @@
     </div>
     <page size="A4" id="content">
       <div class="sec-1">
-        <h5>PAN : AACFD8928</h5>
+        <h5>PAN : AACFD8928N</h5>
         <div class="sec-1-1">
           <h5 class="sec-1-1-h3-top">Tax Invoice / Bill of Supply</h5>
           <h5 class="sec-1-1-h3-bottom">(U/s 31 Read with Rule-)</h5>
@@ -37,7 +37,7 @@
           E-mail : info@dreamvisionindia.com &nbsp;&nbsp;&nbsp; Website :
           www.dreamvisionindia.com
         </h5>
-        <h5>GSTIN NO. : 09AACFD8928N1ZT</h5>
+        <h5>GSTIN : 09AACFD8928N1ZT &nbsp;&nbsp;&nbsp; TAN : MRTD09380A</h5>
       </div>
       <hr />
       <div class="sec-3">
@@ -48,7 +48,7 @@
         <div class="sec-3-grid-item" style="font-weight: bold"><%=billno%></div>
         <div class="sec-3-grid-item">Name: <%=customer.customer_name%></div>
         <div class="sec-3-grid-item">Tax Invoice Date:</div>
-        <div class="sec-3-grid-item"><%=date%></div>
+        <div class="sec-3-grid-item"><%=currentbill.bill_date.toLocaleDateString()%></div>
         <div class="sec-3-grid-item" style="grid-row: 3/6">Address: <%=customer.customer_address%></div>
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
@@ -62,7 +62,7 @@
         <div class="sec-3-grid-item" style="grid-column: 2/4; ">GSTIN : <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">GSTIN : <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">Tax is payable on Reverse Charge</div>
-        <div class="sec-3-grid-item">Six</div>
+        <div class="sec-3-grid-item">No</div>
       </div>
       <div class="sec-4">
         <table class="table">
@@ -81,13 +81,13 @@
               <% air_ticket.forEach(function(ticket) { %>
                   <tr>
                     <td><%=locals.sno%></td>
-                    <td><%=ticket.air_ticket_customer_name%> PNR:<%=ticket.flight_pnr%></td>
+                    <td><%=ticket.air_ticket_customer_name%>&nbsp; PNR:<%=ticket.flight_pnr%></td>
                   </tr>
                   <tr>
                     <td></td>
-                    <td><%=ticket.flight_travel_location%> <%=ticket.flight_number%><%=ticket.flight_date%> <%=ticket.flight_time%> </td>
+                    <td><%=ticket.flight_travel_location%> &nbsp; <%=ticket.flight_number%> &nbsp;<%=ticket.flight_date%>&nbsp; <%=ticket.flight_time%> </td>
                     <td><%=ticket.flight_sac_code%></td>
-                    <td><%=ticket.flight_quantity%></td>
+                    <td><%=ticket.flight_quantity%></td> 
                     <td>₹<%=ticket.flight_rate%></td>
                     <td>₹<%= ticket.flight_quantity * ticket.flight_rate  %></td>
                     <%total=total+parseInt((ticket.flight_quantity) * (ticket.flight_rate)) %>
@@ -124,8 +124,8 @@
           <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
           <div class="sec-5-grid-item">
               <div style="display: flex; flex-direction: column;">
-                  <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                  <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                  <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                  <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
               </div>
           </div>
           <div class="sec-5-grid-item">IGST @ 18%</div>
@@ -139,8 +139,8 @@
             <div class="sec-5-grid-item">-</div>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 18%</div>
@@ -152,17 +152,17 @@
         <div class="sec-5-grid-item" style="grid-row: 4/6.5;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
         <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
-        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">This is a computer generated e-bill</div>
+        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">Dream Vision Holidays Authority Signature</div>
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
-                <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
+                <h4 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h4>
                 <ul style="margin-top: 0; margin-bottom: 0;">
                     <li>Subject to Ghaziabad Jurisdiction</li>
                     <li>Interest @ 21% p.a. will be charged if the bill is not paid within 7 days of presentation</li>
                 </ul>
             </div>
         </div>
-        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center;"><b>#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</b></div>
       </div>
     </page>
     
@@ -182,7 +182,7 @@
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
             
-            doc.save("a4.pdf");
+            doc.save("Bill no-<%=billno%>.pdf");
           });
         });
 

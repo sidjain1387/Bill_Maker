@@ -23,7 +23,7 @@ const db=new pg.Client({
 db.connect();
 
 async function customers(){
-    const result=await db.query("SELECT customer_id,customer_name FROM customer_info order by customer_id desc;");
+    const result=await db.query("SELECT customer_id,customer_name FROM customer_info order by customer_name;");
     return result.rows;
 }
 
@@ -58,7 +58,7 @@ app.get("/preprebill",async(req,res)=>{
 });
 
 app.get("/selected_bill_list",async(req,res)=>{
-    let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
     let bill_status=2;
     res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
 })
@@ -115,7 +115,6 @@ let currentbillno=0;
 let currentbillerid=0;
 let currentbillername="";
 let choice=0;
-let date="";
 
 app.post("/addcustomer",async (req,res)=>{
     const name=req.body.customer_name;
@@ -201,15 +200,14 @@ app.post("/addhotelbooking",async (req,res)=>{
     }
 })
 
-
 app.post("/prebill",async(req,res)=>{
     currentbillno=req.body.bill_id;
     currentbillerid=req.body.customer_id;
     choice=req.body.choice;
 
-    date = await date_now();
+    let bill_date = req.body.bill_date;
 
-    let result2=await db.query("Insert into bill_info(bill_id,bill_customer_id,bill_date,bill_booking_type) values($1,$2,$3,$4)",[currentbillno,currentbillerid,date,choice]);
+    let result2=await db.query("Insert into bill_info(bill_id,bill_customer_id,bill_date,bill_booking_type) values($1,$2,$3,$4)",[currentbillno,currentbillerid,bill_date,choice]);
     currentbillername=await db.query("SELECT customer_name FROM customer_info WHERE customer_id=$1",[currentbillerid]);
     if(choice==1){
         let current_air_tickets=await db.query("SELECT * FROM air_ticket WHERE air_ticket_biller_id=$1 AND air_ticket_bill_id IS NULL",[currentbillerid]);
@@ -218,7 +216,6 @@ app.post("/prebill",async(req,res)=>{
     }
     else if(choice==2){
         let current_hotel_booking=await db.query("SELECT * FROM hotel_booking WHERE hotel_booking_biller_id=$1 AND hotel_booking_bill_id IS NULL",[currentbillerid]);
-        console.log("/prebill current hotel booking",current_hotel_booking.rows);
         res.render("prebill_hotel.ejs",{bill_id:currentbillno, customer_name:currentbillername.rows[0].customer_name, hotel_booking:current_hotel_booking.rows});
     }
 })
@@ -231,8 +228,7 @@ app.post("/bill_hotel",async (req,res)=>{
 
     let service_charge = parseInt(service_charge_quantity) * parseInt(service_charge_rate);
     let original_selected_bookings=req.body.selected_bookings;
-
-    
+    let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[parseInt(currentbillno)]);
     await db.query("UPDATE bill_info SET bill_service_charge = $1 WHERE bill_id = $2;",[parseInt(service_charge),parseInt(currentbillno)]);
     await db.query("UPDATE bill_info SET bill_sac_code = $1 WHERE bill_id = $2;",[parseInt(sac_code),parseInt(currentbillno)]);
     await db.query("UPDATE bill_info SET bill_service_charge_quantity = $1 WHERE bill_id = $2;",[parseInt(service_charge_quantity),parseInt(currentbillno)]);
@@ -289,7 +285,7 @@ app.post("/bill_hotel",async (req,res)=>{
         customer:current_customer.rows[0],
         sno:1,
         billno:currentbillno,
-        date:date,
+        currentbill:bills.rows[0],
         final_sac_code:sac_code,
         final_service_charge:service_charge,
         final_service_charge_quantity:service_charge_quantity,
@@ -304,7 +300,7 @@ app.post("/bill_air",async(req,res)=>{
     let service_charge=parseInt(service_charge_quantity)*parseInt(service_charge_rate);
     let original_selected_bookings=req.body.air_tickets;
     let sac_code=parseInt(req.body.sac_code_original);
-
+    let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[parseInt(currentbillno)]);
 
     await db.query("UPDATE bill_info SET bill_service_charge = $1 WHERE bill_id = $2;",[parseInt(service_charge),parseInt(currentbillno)]);
     await db.query("UPDATE bill_info SET bill_sac_code = $1 WHERE bill_id = $2;",[parseInt(sac_code),parseInt(currentbillno)]);
@@ -355,7 +351,7 @@ app.post("/bill_air",async(req,res)=>{
             customer:current_customer.rows[0],
             sno:1,
             billno:currentbillno,
-            date:date,
+            currentbill:bills.rows[0],
             final_service_charge:service_charge,
             final_service_charge_quantity:service_charge_quantity,
             final_service_charge_rate:service_charge_rate});
@@ -427,20 +423,52 @@ let date_from="";
 let date_to="";
 
 app.post("/final_selected_bill_list",async(req,res)=>{
-    selected_customer_id=req.body.selected_customer_id;
-    date_from=req.body.date_from;
-    date_to=req.body.date_to;
+    if(req.body.selected_customer_id && !req.body.date_from && !req.body.date_to){
+        selected_customer_id=req.body.selected_customer_id;
+        try{
+            let bill_status=1;
+            let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 order by bill_id desc;",[selected_customer_id]);
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+        }catch(err){
+            let bill_status=0;
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+    
+        }
 
-    try{
-        let bill_status=1;
-        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
-        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
-        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
-    }catch(err){
-        let bill_status=0;
-        let all_customers=await db.query("SELECT * FROM customer_info order by customer_id;");
-        res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
-
+    }
+    else if(req.body.date_from && req.body.date_to && !req.body.selected_customer_id){
+        date_from=req.body.date_from;
+        date_to=req.body.date_to;
+        try{
+            let bill_status=1;
+            let bills=await db.query("SELECT * FROM bill_info where bill_date Between $1 and $2 order by bill_id desc;",[date_from,date_to]);
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+        }catch(err){
+            let bill_status=0;
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+    
+        }
+    }
+    else if(req.body.selected_customer_id && req.body.date_from && req.body.date_to){
+        selected_customer_id=req.body.selected_customer_id;
+        date_from=req.body.date_from;
+        date_to=req.body.date_to;
+        
+        try{
+            let bill_status=1;
+            let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+        }catch(err){
+            let bill_status=0;
+            let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+            res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+            
+        }
     }
 })
 
@@ -466,12 +494,15 @@ app.post("/selected_air_bill",async (req,res)=>{
         let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
         let final_air_ticket=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
         let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join air_ticket as a on a.air_ticket_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
-        
+        let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[selected_final_bill_id]);
+
+
+
         res.render("bill_air_ticket.ejs",{air_ticket:final_air_ticket.rows,
             customer:current_customer.rows[0],
             sno:1,
             billno:selected_final_bill_id,
-            date:final_bills.rows[0].bill_date.toLocaleDateString(),
+            currentbill:bills.rows[0],
             final_service_charge:final_bills.rows[0].bill_service_charge,
             final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,
             final_service_charge_rate:final_bills.rows[0].bill_service_charge_rate});
@@ -492,12 +523,13 @@ app.post("/selected_hotel_bill",async (req,res)=>{
         let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
         let final_hotel_booking=await db.query("select a.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
         let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join hotel_booking as a on a.hotel_booking_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[selected_final_bill_id]);
         
         res.render("bill_hotel.ejs",{final_final_hotel_booking:final_hotel_booking.rows,
             customer:current_customer.rows[0],
             sno:1,
             billno:selected_final_bill_id,
-            date:final_bills.rows[0].bill_date.toLocaleDateString(),
+            currentbill:bills.rows[0],
             final_sac_code:final_bills.rows[0].bill_sac_code,
             final_service_charge:final_bills.rows[0].bill_service_charge,
             final_service_charge_quantity:final_bills.rows[0].bill_service_charge_quantity,

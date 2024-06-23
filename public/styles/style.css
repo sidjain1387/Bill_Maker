@@ -63,16 +63,16 @@ hr {
 
 .sec-3 {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 274px 134px;
+  grid-template-rows: 20px 20px 38px 20px 20px 20px;
   margin-left: 10px;
   margin-right: 10px;
-  height: 285px;
+  height: 162px;
   margin-bottom: 20px;
 }
 .sec-3-grid-item {
   border: 1px solid black;
-  padding: 10px;
+  /* padding: 5px; */
 }
 
 .sec-4 {
@@ -97,7 +97,8 @@ table, th, td {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   margin-left: 10px;
   margin-right: 10px;
-  height: 100px;
+  height: 278px;
+  margin-bottom: 10px;
 }
 .sec-5-grid-item,
 .sec-4-grid-item {

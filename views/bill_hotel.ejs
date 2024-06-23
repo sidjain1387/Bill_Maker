@@ -12,7 +12,7 @@
     </div>
     <page size="A4" id="content">
       <div class="sec-1">
-        <h5>PAN : AACFD8928</h5>
+        <h5>PAN : AACFD8928N</h5>
         <div class="sec-1-1">
           <h5 class="sec-1-1-h3-top">Tax Invoice / Bill of Supply</h5>
           <h5 class="sec-1-1-h3-bottom">(U/s 31 Read with Rule-)</h5>
@@ -37,7 +37,7 @@
           E-mail : info@dreamvisionindia.com &nbsp;&nbsp;&nbsp; Website :
           www.dreamvisionindia.com
         </h5>
-        <h5>GSTIN NO. : 09AACFD8928N1ZT</h5>
+        <h5>GSTIN : 09AACFD8928N1ZT &nbsp;&nbsp;&nbsp; TAN : MRTD09380A</h5>
       </div>
       <hr />
       <div class="sec-3">
@@ -48,7 +48,7 @@
         <div class="sec-3-grid-item" style="font-weight: bold"><%=billno%></div>
         <div class="sec-3-grid-item">Name: <%=customer.customer_name%></div>
         <div class="sec-3-grid-item">Tax Invoice Date:</div>
-        <div class="sec-3-grid-item"><%=date%></div>
+        <div class="sec-3-grid-item"><%=currentbill.bill_date.toLocaleDateString()%></div>
         <div class="sec-3-grid-item" style="grid-row: 3/6">Address: <%=customer.customer_address%></div>
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
@@ -86,7 +86,7 @@
                 </tr>
                 <tr>
                   <td></td>
-                  <td><%=ticket.hotel_name%> <%=ticket.hotel_location%> <%=ticket.hotel_nights%> Nights</td>
+                  <td><%=ticket.hotel_name%> &nbsp; <%=ticket.hotel_location%> &nbsp; <%=ticket.hotel_nights%> Nights</td>
                   <td><%=ticket.hotel_sac_code%></td>
                   <td><%=ticket.hotel_quantity%></td>
                   <td><%=ticket.hotel_rate%></td>
@@ -197,7 +197,7 @@
         <div class="sec-5-grid-item" style="grid-row: 4/6;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
         <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
-        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">This is a computer generated e-bill</div>
+        <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7;">Dream Vision Holidays Authority Signature</div>
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
                 <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
@@ -207,7 +207,7 @@
                 </ul>
             </div>
         </div>
-        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
       </div>
     </page>
     <script>
@@ -225,7 +225,7 @@
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            doc.save("a4"+"<%=billno%>"+".pdf");
+            doc.save("Bill no-<%=billno%>.pdf");
           });
         });
         let total=document.getElementById("total_value").innerText;
