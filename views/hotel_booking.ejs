@@ -13,43 +13,93 @@
       <form class="row g-3" method="post" action="/addhotelbooking">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Customer Name</label>
-          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_booking_customer_name">
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_booking_customer_name" list="NameOptions">
+          <datalist id="NameOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_booking_customer_name%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Hotel Name</label>
-          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_name">
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_name" list="HotelOptions">
+          <datalist id="HotelOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_name%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputAddress" class="form-label">Hotel Location</label>
-          <input type="text" class="form-control border border-success" id="inputAddress" name="hotel_location">
+          <input type="text" class="form-control border border-success" id="inputAddress" name="hotel_location" list="LocationOptions">
+          <datalist id="LocationOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_location%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputAddress2" class="form-label">Hotel Nights</label>
-          <input type="number" class="form-control border border-success" id="inputAddress2" name="hotel_nights">
+          <input type="number" class="form-control border border-success" id="inputAddress2" name="hotel_nights" list="NightOptions">
+          <datalist id="NightOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_nights%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputCity" class="form-label">Hotel Check In Date(DD/MM/YYYY)</label>
-          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_in_date">
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_in_date" list="CheckInOptions">
+          <datalist id="CheckInOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_check_in_date%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Hotel Check out Date(DD/MM/YYYY)</label>
-          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_out_date">
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_out_date" list="CheckOutOptions">
+          <datalist id="CheckOutOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_check_out_date%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Quantity</label>
-          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_quantity">
+          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_quantity" list="QuantityOptions">
+          <datalist id="QuantityOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_quantity%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Rate per Qty</label>
-          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_rate">
+          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_rate" list="RateOptions">
+          <datalist id="RateOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_rate%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">SAC Code</label>
-          <input type="text" class="form-control border border-black" id="inputCity" value="00440032" name="hotel_sac_code">
+          <input type="text" class="form-control border border-black" id="inputCity" value="00440032" name="hotel_sac_code" list="CodeOptions">
+          <datalist id="CodeOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_sac_code%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Biller Id</label>
-          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_booking_biller_id">
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_booking_biller_id" list="BillerOptions">
+          <datalist id="BillerOptions">
+            <%previous_bookings.forEach((booking)=>{%>
+              <option value="<%=booking.hotel_booking_biller_id%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary">ADD</button>

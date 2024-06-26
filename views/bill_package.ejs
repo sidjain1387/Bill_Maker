@@ -53,13 +53,13 @@
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
         </div>
-        <div class="sec-3-grid-item">State : <%=customer.customer_state%></div>
-        <div class="sec-3-grid-item">Code : <%=customer.customer_state_code%></div>
+        <div class="sec-3-grid-item">State: <%=customer.customer_state%></div>
+        <div class="sec-3-grid-item">Code <%=customer.customer_state_code%>:</div>
         <div class="sec-3-grid-item">
-          State : <%=customer.customer_state%>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Code : <%=customer.customer_state_code%>
+          State: <%=customer.customer_state%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code:<%=customer.customer_state_code%>
         </div>
-        <div class="sec-3-grid-item" style="grid-column: 2/4; ">GSTIN : <%=customer.customer_gstin%></div>
+        <div class="sec-3-grid-item" style="grid-column: 2/4">GSTIN : <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">GSTIN : <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">Tax is payable on Reverse Charge</div>
         <div class="sec-3-grid-item">No</div>
@@ -78,36 +78,41 @@
           </thead>
           <tbody>
             <% let total=0;%>
-              <% air_ticket.forEach(function(ticket) { %>
-                  <tr>
-                    <td><%=locals.sno%></td>
-                    <td><%=ticket.air_ticket_customer_name%>&nbsp; PNR:<%=ticket.flight_pnr%></td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td><%=ticket.flight_travel_location%> &nbsp; <%=ticket.flight_number%> &nbsp;<%=ticket.flight_date%>&nbsp; <%=ticket.flight_time%> </td>
-                    <td><%=ticket.flight_sac_code%></td>
-                    <td><%=ticket.flight_quantity%></td> 
-                    <td>₹<%=ticket.flight_rate%></td>
-                    <td>₹<%= ticket.flight_quantity * ticket.flight_rate  %></td>
-                    <%total=total+parseInt((ticket.flight_quantity) * (ticket.flight_rate)) %>
-                  </tr>
-                  <tr>
-                    <td> &nbsp; &nbsp;&nbsp;</td>
-                    <td>&nbsp;&nbsp;&nbsp;</td>
-                  </tr>
-
-                  <% sno++; %>
-              <%});%>
-              <tr>
-                <td><%=locals.sno%></td>
-                <td>Service Charge</td>
-                <td></td>
-                <td><%=final_service_charge_quantity%></td>
-                <td>₹<%=final_service_charge_rate%></td>
-                <td>₹<%=final_service_charge%></td>
-                <%total=parseInt(total)+parseInt(final_service_charge)%>
-              </tr>
+                <tr>
+                  <td><%=locals.sno%></td>
+                  <td><%=package_info.package_desc_1%></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><%=package_info.package_desc_2%></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><%=package_info.package_desc_3%></td>
+                  <td style="text-align: center;"><%=package_info.package_sac_code%></td>
+                  <td style="text-align: center;"><%=package_info.package_quantity%></td>
+                  <td style="text-align: center;"><%=package_info.package_rate%></td>
+                  <td style="text-align: center;"><%=package_info.package_quantity*package_info.package_rate%></td>
+                  <%total+=package_info.package_quantity*package_info.package_rate;%>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><%=package_info.package_desc_4%></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><%=package_info.package_desc_5%></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td><%=package_info.package_desc_6%></td>
+                </tr>
+                
+                <tr>
+                  <td>&nbsp;&nbsp;&nbsp;</td>
+                  <td>&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+              <% sno++; %>
           </tbody>
       </table>
       </div>
@@ -115,60 +120,66 @@
       <div class="sec-5">
         <div class="sec-5-grid-item">Bank Details :</div>
         <%if(customer.customer_state_code==9){%>
-          <div class="sec-5-grid-item">SGST @ 9%</div>
-          <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
-          <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
-          <div class="sec-5-grid-item">Dream Vision Holidays</div>
-          <div class="sec-5-grid-item">CGST @ 9%</div>
-          <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
-          <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
-          <div class="sec-5-grid-item">
-              <div style="display: flex; flex-direction: column;">
-                  <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
-                  <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
-              </div>
-          </div>
-          <div class="sec-5-grid-item">IGST @ 18%</div>
-          <div class="sec-5-grid-item">-</div>
-        <%}else{%>
-            
-            <div class="sec-5-grid-item">SGST @ 9%</div>
-            <div class="sec-5-grid-item">-</div>
+          <%if(final_sac_code==440063){%>
+
+            <div class="sec-5-grid-item">SGST @ 2.5%</div>
+            <div class="sec-5-grid-item">₹<%=total*0.025%></div>
+            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
-            <div class="sec-5-grid-item">CGST @ 9%</div>
-            <div class="sec-5-grid-item">-</div>
+            <div class="sec-5-grid-item">CGST @ 2.5%</div>
+            <div class="sec-5-grid-item">₹<%=total*0.025%></div>
+            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
-                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
+                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
+                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
                 </div>
             </div>
-            <div class="sec-5-grid-item">IGST @ 18%</div>
-            <div class="sec-5-grid-item">₹<%=final_service_charge*0.18%></div>
-            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.18)%>
+            <div class="sec-5-grid-item">IGST @ 5%</div>
+            <div class="sec-5-grid-item">-</div>
+          <%}%>
+        <%}else{%>
 
+          <%if(final_sac_code==440063){%>
+
+            <div class="sec-5-grid-item">SGST @ 2.5%</div>
+            <div class="sec-5-grid-item">-</div>
+            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
+            <div class="sec-5-grid-item">Dream Vision Holidays</div>
+            <div class="sec-5-grid-item">CGST @ 2.5%</div>
+            <div class="sec-5-grid-item">-</div>
+            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
+            <div class="sec-5-grid-item">
+                <div style="display: flex; flex-direction: column;">
+                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
+                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                </div>
+            </div>
+            <div class="sec-5-grid-item">IGST @ 5%</div>
+            <div class="sec-5-grid-item">₹<%=total*0.05%></div>
+          <%}%>
 
         <%}%>
-        <div class="sec-5-grid-item" style="grid-row: 4/6.5;" id="amount">Amount in Words : </div>
+        <div class="sec-5-grid-item" style="grid-row: 4/6;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
         <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
         <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7; display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <h3>For Dream Vision Holidays</h3>
           <h4>Auth. Signatory</h4>
         </div>
+
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
-                <h4 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h4>
+                <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
                 <ul style="margin-top: 0; margin-bottom: 0;">
                     <li>Subject to Ghaziabad Jurisdiction</li>
                     <li>Interest @ 21% p.a. will be charged if the bill is not paid within 7 days of presentation</li>
                 </ul>
             </div>
         </div>
-        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center;"><b>#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</b></div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
       </div>
     </page>
-    
     <script>
       document
         .getElementById("download")
@@ -184,11 +195,9 @@
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            
             doc.save("Bill no-<%=billno%>.pdf");
           });
         });
-
         let total=document.getElementById("total_value").innerText;
         let array1=["Zero", 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
         let amount_in_words="";

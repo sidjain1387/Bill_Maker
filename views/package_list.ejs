@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrePreBill</title>
+ 
+
+</head>
+<body>
+  <%-include("partials/header.ejs")%>
+  <div class="container">
+      <br>
+      <br>
+      <h3>Packages List</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Package Id</th>
+                        <th scope="col">Package Description 1</th>
+                        <th scope="col">Package Description 2</th>
+                        <th scope="col">Package Description 3</th>
+                        <th scope="col">Package Description 4</th>
+                        <th scope="col">Package Description 5</th>
+                        <th scope="col">Package Description 6</th>
+                        <th scope="col">Package Quantity</th>
+                        <th scope="col">Package Rate</th>
+                        <th scope="col">Package SAC Code</th>
+                        <th scope="col">Package Biller Id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% package_info.forEach(function(ticket) { %>
+                        <tr>
+                            <td><%=ticket.package_id%></td>
+                            <td><%=ticket.package_desc_1%></td>
+                            <td><%=ticket.package_desc_2%></td>
+                            <td><%=ticket.package_desc_3%></td>
+                            <td><%=ticket.package_desc_4%></td>
+                            <td><%=ticket.package_desc_5%></td>
+                            <td><%=ticket.package_desc_6%></td>
+                            <td><%=ticket.package_quantity%></td>
+                            <td><%=ticket.package_rate%></td>
+                            <td><%=ticket.package_sac_code%></td>
+                            <td><%=ticket.package_biller_id%></td>
+                        </tr>
+                    <%});%>
+                </tbody>
+            </table>
+        <br>
+        <br>
+      </div>
+</body>
+
+</html>

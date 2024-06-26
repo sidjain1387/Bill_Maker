@@ -45,11 +45,13 @@ app.get("/customer",(req,res)=>{
 });
 app.get("/air_ticket",async (req,res)=>{
     const customer= await customers();
-    res.render("air_ticket.ejs",{customer:customer});
+    let previous_tickets=await db.query("SELECT * FROM air_ticket ORDER BY air_ticket_id DESC LIMIT 3;");
+    res.render("air_ticket.ejs",{customer:customer,previous_tickets:previous_tickets.rows});
 }); 
 app.get("/hotel_booking", async(req,res)=>{
     const customer= await customers();
-    res.render("hotel_booking.ejs",{customer:customer});
+    let previous_bookings=await db.query("SELECT * FROM hotel_booking ORDER BY hotel_booking_id DESC LIMIT 3;");
+    res.render("hotel_booking.ejs",{customer:customer,previous_bookings:previous_bookings.rows});
 });
 
 app.get("/preprebill",async(req,res)=>{
@@ -149,6 +151,7 @@ app.post("/addticket",async (req,res)=>{
 
     try{
         const result=await db.query("INSERT INTO air_ticket(flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code]);
+        let previous_tickets=await db.query("SELECT * FROM air_ticket ORDER BY air_ticket_id DESC LIMIT 3;");
 
         res.render("air_ticket.ejs",
             {number:result.rows[0].flight_number ,
@@ -160,7 +163,8 @@ app.post("/addticket",async (req,res)=>{
                  customer:customer,
                 quantity:result.rows[0].flight_quantity,
                 rate:result.rows[0].flight_rate,
-                sac_code:result.rows[0].flight_sac_code});
+                sac_code:result.rows[0].flight_sac_code,
+                previous_tickets:previous_tickets.rows});
     }
     catch (err){
         console.log(err);
@@ -182,6 +186,7 @@ app.post("/addhotelbooking",async (req,res)=>{
 
     try{
         const result=await db.query("INSERT INTO hotel_booking(hotel_booking_customer_name,hotel_name,hotel_location,hotel_nights,hotel_check_in_date,hotel_check_out_date,hotel_booking_biller_id,hotel_quantity,hotel_rate,hotel_sac_code) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;",[hotel_booking_customer_name,hotel_name,hotel_location,hotel_nights,hotel_check_in_date,hotel_check_out_date,hotel_booking_biller_id,hotel_quantity,hotel_rate,hotel_sac_code]);
+        let previous_bookings=await db.query("SELECT * FROM hotel_booking ORDER BY hotel_booking_id DESC LIMIT 3;");
 
         res.render("hotel_booking.ejs",
             {name:result.rows[0].hotel_booking_customer_name ,
@@ -193,7 +198,8 @@ app.post("/addhotelbooking",async (req,res)=>{
                  customer:customer,
                 quantity:result.rows[0].hotel_quantity,
                 rate:result.rows[0].hotel_rate,
-                sac_code:result.rows[0].hotel_sac_code});
+                sac_code:result.rows[0].hotel_sac_code,
+                previous_bookings:previous_bookings.rows});
     }
     catch (err){
         console.log(err);
@@ -217,6 +223,11 @@ app.post("/prebill",async(req,res)=>{
     else if(choice==2){
         let current_hotel_booking=await db.query("SELECT * FROM hotel_booking WHERE hotel_booking_biller_id=$1 AND hotel_booking_bill_id IS NULL",[currentbillerid]);
         res.render("prebill_hotel.ejs",{bill_id:currentbillno, customer_name:currentbillername.rows[0].customer_name, hotel_booking:current_hotel_booking.rows});
+    }
+    else if(choice==3){
+        let current_package=await db.query("SELECT * FROM package_info WHERE package_biller_id=$1 AND package_bill_id IS NULL",[currentbillerid]);
+        res.render("prebill_package.ejs",{bill_id:currentbillno, customer_name:currentbillername.rows[0].customer_name, package_info:current_package.rows});
+    
     }
 })
 
@@ -357,6 +368,69 @@ app.post("/bill_air",async(req,res)=>{
             final_service_charge_rate:service_charge_rate});
 })
 
+app.post("/bill_package",async(req,res)=>{
+        
+    let selected_packages=[];
+    let service_charge_quantity=0;
+    let service_charge_rate=0;
+    let service_charge=0;
+    let original_selected_packages=req.body.packages;
+    let sac_code=parseInt(req.body.sac_code_original);
+    let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[parseInt(currentbillno)]);
+
+    await db.query("UPDATE bill_info SET bill_service_charge = $1 WHERE bill_id = $2;",[parseInt(service_charge),parseInt(currentbillno)]);
+    await db.query("UPDATE bill_info SET bill_sac_code = $1 WHERE bill_id = $2;",[parseInt(sac_code),parseInt(currentbillno)]);
+    await db.query("UPDATE bill_info SET bill_service_charge_quantity = $1 WHERE bill_id = $2;",[parseInt(service_charge_quantity),parseInt(currentbillno)]);
+    await db.query("UPDATE bill_info SET bill_service_charge_rate = $1 WHERE bill_id = $2;",[parseInt(service_charge_rate),parseInt(currentbillno)]);
+
+    if(typeof(original_selected_packages)=='string'){
+        let ticket=parseInt(original_selected_packages);
+        selected_packages.push(ticket);
+    }
+    else{
+        for(let j=0;j<original_selected_packages.length;j++){
+            
+            let ticket=parseInt(original_selected_packages[j]);
+            
+            selected_packages.push(ticket);
+        };
+    }
+    
+    selected_packages.forEach((ticket)=>{
+        ticket=parseInt(ticket);
+        let query_12345=db.query("UPDATE package_info SET package_biller_id=$1,package_bill_id=$2 WHERE package_id=$3",[currentbillerid,currentbillno,ticket]);
+    })
+    let query2="SELECT * FROM package_info WHERE package_id IN";
+    let where_value2="";
+    for(let i=0;i<=selected_packages.length+1;i++){
+        if(i==0){
+            where_value2+="(";
+        }
+        else if(i==selected_packages.length+1){
+            where_value2+=");";
+        }
+        else{
+            if(i==selected_packages.length){
+                where_value2+="$"+i;
+            }
+            else{
+                where_value2+="$"+i+",";
+            }
+        }      
+    }
+    query2+=where_value2;
+        
+    let current_customer=await db.query("SELECT * FROM customer_info WHERE customer_id=$1",[currentbillerid]);
+    console.log("customer",currentbillerid);
+
+    let final_packages= await db.query(`${query2}`,selected_packages);
+    res.render("bill_package.ejs",{package_info:final_packages.rows[0],
+            customer:current_customer.rows[0],
+            sno:1,
+            final_sac_code:sac_code,
+            billno:currentbillno,
+            currentbill:bills.rows[0]});
+})
 
 
 app.post("/delete_selected_biller",async(req,res)=>{
@@ -542,6 +616,193 @@ app.post("/selected_hotel_bill",async (req,res)=>{
         res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
     }
 })
+
+app.post("/selected_package",async (req,res)=>{
+    try{
+        let selected_final_bill_id=req.body.bill_id;
+        let final_bills=await db.query("select b.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join package_info as p on p.package_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let final_packages=await db.query("select p.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join package_info as p on p.package_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let current_customer=await db.query("select c.* from bill_info as b join customer_info as c on b.bill_customer_id=c.customer_id join package_info as p on p.package_bill_id=b.bill_id where bill_id=$1;",[selected_final_bill_id]);
+        let bills=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[selected_final_bill_id]);
+        console.log("current customer",current_customer.rows[0]);
+        console.log("final packages",final_packages.rows[0]);
+        console.log("final bills",final_bills.rows[0]);
+        console.log("current bill",bills.rows[0]);
+
+
+        res.render("bill_package.ejs",{package_info:final_packages.rows[0],
+            customer:current_customer.rows[0],
+            sno:1,
+            final_sac_code:final_packages.rows[0].package_sac_code,
+            billno:bills.rows[0].bill_id,
+            currentbill:bills.rows[0]});
+    }
+    catch(err){
+        let bill_status=0;
+        let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[selected_customer_id,date_from,date_to]);
+        let all_customers=await db.query("SELECT * FROM customer_info");
+        res.render("bill_list.ejs",{bill:bills.rows,customers:all_customers.rows,bill_status:bill_status});
+    }
+
+
+})
+
+app.get("/edit_air_ticket",async(req,res)=>{
+    let air_tickets=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
+    res.render("edit_1_air_ticket.ejs",{air_ticket:air_tickets.rows});
+})
+
+let selected_to_edit_air_ticket=0;
+app.post("/edit_selected_air_ticket",async(req,res)=>{
+    selected_to_edit_air_ticket=req.body.air_ticket_id;
+    let customer=await customers();
+    let air_tickets=await db.query("SELECT * FROM air_ticket WHERE air_ticket_id=$1",[parseInt(selected_to_edit_air_ticket)]);
+    res.render("edit_2_air_ticket.ejs",{ticket:air_tickets.rows[0],customer:customer});
+})
+
+app.post("/final_edit_air_ticket",async(req,res)=>{
+    const flight_number=req.body.flight_number;
+    const flight_date=req.body.flight_date;
+    const flight_time=req.body.flight_time;
+    const flight_pnr=req.body.flight_pnr;
+    const flight_travel_location=req.body.flight_travel_location;
+    const air_ticket_customer_name=req.body.air_ticket_customer_name;
+    const air_ticket_biller_id=req.body.air_ticket_biller_id;
+    const flight_quantity=req.body.flight_quantity;
+    const flight_rate=req.body.flight_rate;
+    const flight_sac_code=req.body.flight_sac_code;
+
+    let result=await db.query("UPDATE air_ticket SET flight_number=$1,flight_date=$2,flight_time=$3,flight_pnr=$4,flight_travel_location=$5,air_ticket_customer_name=$6,air_ticket_biller_id=$7,flight_quantity=$8,flight_rate=$9,flight_sac_code=$10 WHERE air_ticket_id=$11;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code,selected_to_edit_air_ticket]);
+    res.redirect("/air_ticket_list");
+
+})
+
+app.get("/edit_customer",async(req,res)=>{
+    let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
+    res.render("edit_1_customer.ejs",{customer:customers.rows});
+})
+
+let selected_to_edit_customer_id=0;
+
+app.post("/edit_selected_customer",async(req,res)=>{
+    selected_to_edit_customer_id=req.body.customer_id;
+    let customer=await db.query("SELECT * FROM customer_info WHERE customer_id=$1",[selected_to_edit_customer_id]);
+    res.render("edit_2_customer.ejs",{customer:customer.rows[0]});
+})
+
+app.post("/final_edit_selected_customer",async(req,res)=>{
+    const name=req.body.customer_name;
+    const address=req.body.customer_address;
+    const gstin=req.body.customer_gstin;
+    const state=req.body.customer_state;
+    const code=req.body.customer_code;
+    let result=await db.query("UPDATE customer_info SET customer_name=$1,customer_address=$2,customer_state=$3,customer_state_code=$4,customer_gstin=$5 WHERE customer_id=$6;",[name,address,state,code,gstin,selected_to_edit_customer_id]);
+    res.redirect("/customer_list");
+})
+
+
+app.get("/edit_hotel_booking",async(req,res)=>{
+    let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
+    res.render("edit_1_hotel_booking.ejs",{hotel_booking:hotel_booking.rows});
+})
+
+let selected_to_edit_hotel_booking=0;
+app.post("/edit_selected_hotel_booking",async(req,res)=>{
+    selected_to_edit_hotel_booking=req.body.hotel_booking_id;
+    let customer=await customers();
+    let hotel_booking=await db.query("SELECT * FROM hotel_booking WHERE hotel_booking_id=$1",[selected_to_edit_hotel_booking]);
+    res.render("edit_2_hotel_booking.ejs",{booking:hotel_booking.rows[0],customer:customer});
+})
+
+app.post("/final_edit_hotel_booking",async(req,res)=>{
+    const hotel_booking_customer_name=req.body.hotel_booking_customer_name;
+    const hotel_name=req.body.hotel_name;
+    const hotel_location=req.body.hotel_location;
+    const hotel_nights=req.body.hotel_nights;
+    const hotel_check_in_date=req.body.hotel_check_in_date;
+    const hotel_check_out_date=req.body.hotel_check_out_date;
+    const hotel_booking_biller_id=req.body.hotel_booking_biller_id;
+    const hotel_quantity=req.body.hotel_quantity;
+    const hotel_rate=req.body.hotel_rate;
+    const hotel_sac_code=req.body.hotel_sac_code;
+    await db.query("UPDATE hotel_booking SET hotel_booking_customer_name=$1,hotel_name=$2,hotel_location=$3,hotel_nights=$4,hotel_check_in_date=$5,hotel_check_out_date=$6,hotel_booking_biller_id=$7,hotel_quantity=$8,hotel_rate=$9,hotel_sac_code=$10 WHERE hotel_booking_id=$11;",[hotel_booking_customer_name,hotel_name,hotel_location,hotel_nights,hotel_check_in_date,hotel_check_out_date,hotel_booking_biller_id,hotel_quantity,hotel_rate,hotel_sac_code,selected_to_edit_hotel_booking]);
+    res.redirect("/hotel_booking_list");
+
+})
+
+app.get("/package",async(req,res)=>{
+    let customer=await customers();
+    res.render("package.ejs",{customer:customer});
+})
+
+app.post("/add_package",async(req,res)=>{
+    let package_desc_1=req.body.package_desc_1;
+    let package_desc_2=req.body.package_desc_2;
+    let package_desc_3=req.body.package_desc_3;
+    let package_desc_4=req.body.package_desc_4;
+    let package_desc_5=req.body.package_desc_5;
+    let package_desc_6=req.body.package_desc_6;
+    let package_quantity=req.body.package_quantity;
+    let package_rate=req.body.package_rate;
+    let package_sac_code=req.body.package_sac_code;
+    let package_biller_id=req.body.package_biller_id;
+    let customer=await customers();
+    let result=await db.query("INSERT INTO package_info(package_desc_1,package_desc_2,package_desc_3,package_desc_4,package_desc_5,package_desc_6,package_quantity,package_rate,package_sac_code,package_biller_id) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;",[package_desc_1,package_desc_2,package_desc_3,package_desc_4,package_desc_5,package_desc_6,package_quantity,package_rate,package_sac_code,package_biller_id]);
+    res.render("package.ejs",{number: result.rows[0],customer:customer});
+})
+
+app.get("/package_list",async(req,res)=>{
+    let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
+    res.render("package_list.ejs",{package_info:package_info.rows});
+})
+
+app.get("/delete_package",async(req,res)=>{
+    let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
+    res.render("delete_package.ejs",{package_info:package_info.rows});
+})
+
+app.post("/delete_selected_package",async(req,res)=>{
+    let package_id=req.body.package_id;
+    try{
+        await db.query("DELETE FROM package_info WHERE package_id=$1;",[package_id]);
+        res.redirect("/package_list");
+    }
+    catch(err){
+        console.log(err);
+    }
+        
+})
+
+
+app.get("/edit_package",async(req,res)=>{
+    let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
+    res.render("edit_1_package.ejs",{package_info:package_info.rows});
+})
+let selected_to_edit_package_id=0;
+app.post("/edit_selected_package",async(req,res)=>{
+    selected_to_edit_package_id=req.body.package_id;
+    let package_info=await db.query("SELECT * FROM package_info WHERE package_id=$1",[selected_to_edit_package_id]);
+    let customer=await customers();
+    res.render("edit_2_package.ejs",{package_info:package_info.rows[0],customer:customer});
+})
+
+app.post("/final_edit_selected_package",async(req,res)=>{
+    const package_desc_1=req.body.package_desc_1;
+    const package_desc_2=req.body.package_desc_2;
+    const package_desc_3=req.body.package_desc_3;
+    const package_desc_4=req.body.package_desc_4;
+    const package_desc_5=req.body.package_desc_5;
+    const package_desc_6=req.body.package_desc_6;
+    const package_quantity=req.body.package_quantity;
+    const package_rate=req.body.package_rate;
+    const package_sac_code=req.body.package_sac_code;
+    const package_biller_id=req.body.package_biller_id;
+    await db.query("UPDATE package_info SET package_desc_1=$1,package_desc_2=$2,package_desc_3=$3,package_desc_4=$4,package_desc_5=$5,package_desc_6=$6,package_quantity=$7,package_rate=$8,package_sac_code=$9,package_biller_id=$10 WHERE package_id=$11;",[package_desc_1,package_desc_2,package_desc_3,package_desc_4,package_desc_5,package_desc_6,package_quantity,package_rate,package_sac_code,package_biller_id,selected_to_edit_package_id]);
+    res.redirect("/package_list");
+
+})
+
+
 
 app.listen(3000,()=>{
     console.log("Server is running on port 3000");

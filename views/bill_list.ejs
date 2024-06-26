@@ -79,12 +79,18 @@
                                         <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
                                         <td><button type="submit" id="original_button">Click Here</button></td>
                                     </form>
-                                <%}else{%>
+                                <%}else if(bill.bill_booking_type==1){%>
+
                                     <form action="/selected_air_bill" method="POST">
                                         <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
                                         <td><button type="submit" id="original_button">Click Here</button></td>
                                     </form>
-                                <%};%>
+                                <%}else{%>
+                                    <form action="/selected_package" method="POST">
+                                      <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                      <td><button type="submit" id="original_button">Click Here</button></td>
+                                    </form>
+                                <%}%>
                             <%};%>
                         </tr>
                         <%});%>

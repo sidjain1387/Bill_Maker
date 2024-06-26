@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+ 
+  </head>
+  <body>
+    <%-include("partials/header.ejs")%>
+
+    <h1 style="text-align: center">Adding Air Ticket</h1>
+    <div class="container-sm col-6">
+      <form class="row g-3" method="post" action="/final_edit_selected_package">
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Package Desciption 1</label>
+          <input type="text" class="form-control border border-black" id="inputEmail4" name="package_desc_1" value="<%=package_info.package_desc_1%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Package Desciption 2</label>
+          <input type="text" class="form-control border border-black" id="inputEmail4" name="package_desc_2" value="<%=package_info.package_desc_2%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputAddress" class="form-label">Package Desciption 3</label>
+          <input type="text" class="form-control border border-black" id="inputAddress" name="package_desc_3" value="<%=package_info.package_desc_3%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputAddress2" class="form-label">Package Desciption 4</label>
+          <input type="text" class="form-control border border-black" id="inputAddress2" name="package_desc_4" value="<%=package_info.package_desc_4%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputCity" class="form-label">Package Desciption 5</label>
+          <input type="text" class="form-control border border-black" id="inputCity" name="package_desc_5" value="<%=package_info.package_desc_5%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Package Desciption 6</label>
+          <input type="text" class="form-control border border-black" id="inputCity" name="package_desc_6" value="<%=package_info.package_desc_6%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Quantity</label>
+          <input type="number" class="form-control border border-black" id="inputCity" name="package_quantity" value="<%=package_info.package_quantity%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Rate per Qty</label>
+          <input type="number" class="form-control border border-black" id="inputCity" name="package_rate" value="<%=package_info.package_rate%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">SAC Code</label>
+          <input type="text" class="form-control border border-black" id="inputCity" value="00440063" name="package_sac_code" value="<%=package_info.package_sac_code%>">
+        </div>
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Biller Id</label>
+          <input type="text" class="form-control border border-black" id="inputCity" name="package_biller_id" value="<%=package_info.package_biller_id%>">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">SUBMIT</button>
+        </div>
+      </form>
+      <br>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Biller Id</th>
+            <th scope="col">Biller Name</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% customer.forEach((customer)=>{%>
+                <tr>
+                    <th scope="row"><%=customer.customer_id%></th>
+                    <td><%=customer.customer_name%></td>
+                </tr>
+            <%});%>
+        </tbody>
+      </table>
+      <br>
+    </div>
+
+  </body>
+  
+</html>

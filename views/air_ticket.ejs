@@ -14,43 +14,93 @@
       <form class="row g-3" method="post" action="/addticket">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Customer Name</label>
-          <input type="text" class="form-control border border-black" id="inputEmail4" name="air_ticket_customer_name">
+          <input type="text" class="form-control border border-black" id="inputEmail4" name="air_ticket_customer_name" list="NameOptions">
+          <datalist id="NameOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.air_ticket_customer_name%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Flight Number</label>
-          <input type="text" class="form-control border border-black" id="inputEmail4" name="flight_number">
+          <input type="text" class="form-control border border-black" id="inputEmail4" name="flight_number" list="NumberOptions">
+          <datalist id="NumberOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_number%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputAddress" class="form-label">Flight Date (DD/MM/YYYY)</label>
-          <input type="text" class="form-control border border-black" id="inputAddress" name="flight_date">
+          <input type="text" class="form-control border border-black" id="inputAddress" name="flight_date" list="DateOptions">
+          <datalist id="DateOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_date%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputAddress2" class="form-label">Flight Time (HH:MM)</label>
-          <input type="text" class="form-control border border-black" id="inputAddress2" name="flight_time">
+          <input type="text" class="form-control border border-black" id="inputAddress2" name="flight_time" list="TimeOptions">
+          <datalist id="TimeOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_time%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputCity" class="form-label">Flight PNR</label>
-          <input type="text" class="form-control border border-black" id="inputCity" name="flight_pnr">
+          <input type="text" class="form-control border border-black" id="inputCity" name="flight_pnr" list="PnrOptions">
+          <datalist id="PnrOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_pnr%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Flight From/To (eg: DEL/AYJ)</label>
-          <input type="text" class="form-control border border-black" id="inputCity" name="flight_travel_location">
+          <input type="text" class="form-control border border-black" id="inputCity" name="flight_travel_location" list="LocationOptions">
+          <datalist id="LocationOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_travel_location%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Quantity</label>
-          <input type="number" class="form-control border border-black" id="inputCity" name="flight_quantity">
+          <input type="number" class="form-control border border-black" id="inputCity" name="flight_quantity" list="QuantityOptions">
+          <datalist id="QuantityOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_quantity%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Rate per Qty</label>
-          <input type="number" class="form-control border border-black" id="inputCity" name="flight_rate">
+          <input type="number" class="form-control border border-black" id="inputCity" name="flight_rate" list="RateOptions">
+          <datalist id="RateOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_rate%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">SAC Code</label>
-          <input type="text" class="form-control border border-black" id="inputCity" value="00440032" name="flight_sac_code">
+          <input type="text" class="form-control border border-black" id="inputCity" value="00440032" name="flight_sac_code" list="CodeOptions">
+          <datalist id="CodeOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.flight_sac_code%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-md-6">
           <label for="inputState" class="form-label">Biller Id</label>
-          <input type="text" class="form-control border border-black" id="inputCity" name="air_ticket_biller_id">
+          <input type="text" class="form-control border border-black" id="inputCity" name="air_ticket_biller_id" list="BillerOptions">
+          <datalist id="BillerOptions">
+            <%previous_tickets.forEach((ticket)=>{%>
+              <option value="<%=ticket.air_ticket_biller_id%>">
+            <%});%>
+          </datalist>
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary">ADD</button>

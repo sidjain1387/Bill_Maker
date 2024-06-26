@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+ 
+  </head>
+  <body>
+    <%-include("partials/header.ejs")%>
+    <h1 style="text-align: center">Adding Hotel Booking</h1>
+    <div class="container-sm col-6">
+      <form class="row g-3" method="post" action="/final_edit_hotel_booking">
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Customer Name</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_booking_customer_name" value="<%=booking.hotel_booking_customer_name%>">
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Hotel Name</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_name" value="<%=booking.hotel_name%>">
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputAddress" class="form-label">Hotel Location</label>
+          <input type="text" class="form-control border border-success" id="inputAddress" name="hotel_location" value="<%=booking.hotel_location%>">
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputAddress2" class="form-label">Hotel Nights</label>
+          <input type="number" class="form-control border border-success" id="inputAddress2" name="hotel_nights" value="<%=booking.hotel_nights%>">
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputCity" class="form-label">Hotel Check In Date(DD/MM/YYYY)</label>
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_in_date" value="<%=booking.hotel_check_in_date%>">          
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Hotel Check out Date(DD/MM/YYYY)</label>
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_check_out_date" value="<%=booking.hotel_check_out_date%>">          
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Quantity</label>
+          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_quantity" value="<%=booking.hotel_quantity%>">          
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Rate per Qty</label>
+          <input type="number" class="form-control border border-black" id="inputCity" name="hotel_rate" value="<%=booking.hotel_rate%>">          
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">SAC Code</label>
+          <input type="text" class="form-control border border-black" id="inputCity" value="00440032" name="hotel_sac_code" value="<%=booking.hotel_sac_code%>">         
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputState" class="form-label">Biller Id</label>
+          <input type="text" class="form-control border border-success" id="inputCity" name="hotel_booking_biller_id" value="<%=booking.hotel_booking_biller_id%>">
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">SUBMIT</button>
+        </div>
+
+      </form>
+      <br>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Biller Id</th>
+            <th scope="col">Biller Name</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% customer.forEach((customer)=>{%>
+                <tr>
+                    <th scope="row"><%=customer.customer_id%></th>
+                    <td><%=customer.customer_name%></td>
+                </tr>
+            <%});%>
+        </tbody>
+      </table>
+      <br>
+    </div>
+
+  </body>
+  
+</html>
