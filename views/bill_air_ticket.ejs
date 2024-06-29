@@ -185,7 +185,7 @@
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
             
-            doc.save("Bill no-<%=billno%>.pdf");
+            doc.save("<%=customer.customer_name%> Bill no:<%=billno%>.pdf");
           });
         });
 
