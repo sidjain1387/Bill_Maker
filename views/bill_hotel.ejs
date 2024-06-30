@@ -11,7 +11,7 @@
       <a href="/return_final_selected_bill_list"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return</button></a>
     </div>
     <page size="A4" id="content">
-      <div class="sec-1">
+      <div class="sec-1 font_body" style="margin-bottom: 5px;">
         <h5>PAN : AACFD8928N</h5>
         <div class="sec-1-1">
           <h5 class="sec-1-1-h3-top">Tax Invoice / Bill of Supply</h5>
@@ -23,8 +23,8 @@
         </div>
       </div>
       <hr />
-      <div class="sec-2">
-        <h2>DREAM VISION HOLIDAYS</h2>
+      <div class="sec-2 font_body" style="margin-bottom: 5px;">
+        <h2 class="font_header" style="margin-top: 5px; margin-bottom: 3px;">DREAM VISION HOLIDAYS</h2>
         <h5>
           GF-11, II-A/19, Nehru Nagar, Near Jain Mandir Flyover, Amar Ujala
           Building, Ghaziabad-201001 (U.P)
@@ -39,8 +39,8 @@
         </h5>
         <h5>GSTIN : 09AACFD8928N1ZT &nbsp;&nbsp;&nbsp; TAN : MRTD09380A</h5>
       </div>
-      <hr />
-      <div class="sec-3">
+
+      <div class="sec-3 font_sec_3" style="margin-top: 5px;">
         <div class="sec-3-grid-item" style="text-align: center">
           Receipient Details
         </div>
@@ -64,93 +64,99 @@
         <div class="sec-3-grid-item">Tax is payable on Reverse Charge</div>
         <div class="sec-3-grid-item">No</div>
       </div>
-      <div class="sec-4">
+
+      <div class="sec-4 font_sec_4">
         <table class="table">
-          <thead>
+          <thead class="table_head_color_border">
               <tr>
-                  <th scope="col">SNo.</th>
-                  <th scope="col">Description Of Services</th>
-                  <th scope="col">SAC Code</th>
-                  <th scope="col">Qty/Unit</th>
-                  <th scope="col">Rate</th>
-                  <th scope="col">Total Value</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SNo.</th>
+                  <th scope="col" class="text_align_center desc_width table_border_bottom table_border_top table_border_left">Description Of Services</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SAC Code</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Qty/Unit</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Rate</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left table_border_right">Total Value</th>
               </tr>
           </thead>
-          <tbody>
+          <tbody class="table_body_bgcolor">
             <% let total=0;%>
 
             <% final_final_hotel_booking.forEach((ticket)=>{ %>
                 <tr>
-                  <td><%=locals.sno%></td>
-                  <td><%=ticket.hotel_booking_customer_name%></td>
+                  <td class="text_align_center table_border_left"><%=locals.sno%></td>
+                  <td class="table_border_left"><%=ticket.hotel_booking_customer_name%></td>
+                  <td class="text_align_center table_border_left"><%=ticket.hotel_sac_code%></td>
+                  <td class="text_align_center table_border_left"><%=ticket.hotel_quantity%></td>
+                  <td class="text_align_center table_border_left">₹<%=ticket.hotel_rate%></td>
+                  <td class="text_align_center table_border_left table_border_right">₹<%=ticket.hotel_quantity*ticket.hotel_rate%></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=ticket.hotel_name%> &nbsp; <%=ticket.hotel_location%> &nbsp; <%=ticket.hotel_nights%> Nights</td>
-                  <td><%=ticket.hotel_sac_code%></td>
-                  <td><%=ticket.hotel_quantity%></td>
-                  <td><%=ticket.hotel_rate%></td>
-                  <td>₹<%=ticket.hotel_quantity*ticket.hotel_rate%></td>
+                  <td class="text_align_center table_border_left"></td>
+                  <td class="table_border_left"><%=ticket.hotel_name%> &nbsp; <%=ticket.hotel_location%> &nbsp; <%=ticket.hotel_nights%> Nights</td>
+                  <td class="text_align_center table_border_left"></td>
+                  <td class="text_align_center table_border_left"></td>
+                  <td class="text_align_center table_border_left"></td>
+                  <td class="text_align_center table_border_left table_border_right"></td>
                   <%total=total+parseInt((ticket.hotel_quantity) * (ticket.hotel_rate)) %>
 
                 </tr>
                 <tr>
-                  <td></td>
-                  <td>Check In-<%=ticket.hotel_check_in_date%> Check out-<%=ticket.hotel_check_out_date%></td>
-                </tr>
-                <tr>
-                  <td>&nbsp;&nbsp;&nbsp;</td>
-                  <td>&nbsp;&nbsp;&nbsp;</td>
+                  <td class="text_align_center table_border_left table_border_bottom"></td>
+                  <td class="table_border_left table_border_bottom">Check In-<%=ticket.hotel_check_in_date%> Check out-<%=ticket.hotel_check_out_date%></td>
+                  <td class="text_align_center table_border_left table_border_bottom"></td>
+                  <td class="text_align_center table_border_left table_border_bottom"></td>
+                  <td class="text_align_center table_border_left table_border_bottom"></td>
+                  <td class="text_align_center table_border_left table_border_right table_border_bottom"></td>
                 </tr>
               <% sno++; %>
             <%});%>
             <%let hotel_total=total;%>
             <tr>
-              <td><%=locals.sno%></td>
-              <td>Service Charge</td>
-              <td></td>
-              <td><%=final_service_charge_quantity%></td>
-              <td>₹<%=final_service_charge_rate%></td>
-              <td>₹<%=final_service_charge%></td>
+              <td class="text_align_center table_border_left table_border_bottom"><%=locals.sno%></td>
+              <td class="table_border_left table_border_bottom">Service Charge</td>
+              <td class="text_align_center table_border_left table_border_bottom"></td>
+              <td class="text_align_center table_border_left table_border_bottom"><%=final_service_charge_quantity%></td>
+              <td class="text_align_center table_border_left table_border_bottom">₹<%=final_service_charge_rate%></td>
+              <td class="text_align_center table_border_left table_border_right table_border_bottom">₹<%=final_service_charge%></td>
               <%total=parseInt(total)+parseInt(final_service_charge)%>
             </tr>
           </tbody>
       </table>
       </div>
 
-      <div class="sec-5">
+      <div class="sec-5 font_sec_5">
         <div class="sec-5-grid-item">Bank Details :</div>
         <%if(customer.customer_state_code==9){%>
           <%if(final_sac_code==440063){%>
-
+            <% let prev_total=hotel_total*0.025; %>
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
-            <div class="sec-5-grid-item">₹<%=hotel_total*0.025%></div>
-            <%total=parseInt(total)+parseInt(parseInt(hotel_total)*0.025)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
-            <div class="sec-5-grid-item">₹<%=hotel_total*0.025%></div>
-            <%total=parseInt(total)+parseInt(parseInt(hotel_total)*0.025)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 5%</div>
             <div class="sec-5-grid-item">-</div>
           <%}else{%>
+            <% let prev_total=final_service_charge*0.09; %>
 
             <div class="sec-5-grid-item">SGST @ 9%</div>
-            <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
-            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 9%</div>
-            <div class="sec-5-grid-item">₹<%=final_service_charge*0.09%></div>
-            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 18%</div>
@@ -159,44 +165,43 @@
         <%}}else{%>
 
           <%if(final_sac_code==440063){%>
+            <% let prev_total=hotel_total*0.05; %>
 
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(hotel_total)*0.025)%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(hotel_total)*0.025)%>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 5%</div>
-            <div class="sec-5-grid-item">₹<%=hotel_total*0.05%></div>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
           <%}else{%>
-
+            <% let prev_total=final_service_charge*0.18; %>
             <div class="sec-5-grid-item">SGST @ 9%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 9%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(final_service_charge)*0.09)%>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 18%</div>
-            <div class="sec-5-grid-item">₹<%=final_service_charge*0.18%></div>
+            <div class="sec-5-grid-item">₹<%=(prev_total).toFixed(2)%></div>
 
         <%}}%>
-        <div class="sec-5-grid-item" style="grid-row: 4/6;" id="amount">Amount in Words : </div>
+        <div class="sec-5-grid-item" style="grid-row: 4/6.5;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
-        <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
+        <div class="sec-5-grid-item" id="total_value">₹<%=(total).toFixed(0)%></div>
         <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7; display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <h3>For Dream Vision Holidays</h3>
           <h4>Auth. Signatory</h4>
@@ -204,14 +209,14 @@
 
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
-                <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
+                <h4 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h4>
                 <ul style="margin-top: 0; margin-bottom: 0;">
                     <li>Subject to Ghaziabad Jurisdiction</li>
                     <li>Interest @ 21% p.a. will be charged if the bill is not paid within 7 days of presentation</li>
                 </ul>
             </div>
         </div>
-        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500;  background-color: rgb(46, 46, 242); color: white;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
       </div>
     </page>
     <script>

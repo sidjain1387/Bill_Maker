@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com");
+@import url("https://fonts.gstatic.com");
+@import url("https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 body {
   background: rgb(204, 204, 204);
 }
@@ -65,15 +71,17 @@ hr {
 .sec-3 {
   display: grid;
   grid-template-columns: 2fr 274px 134px;
-  grid-template-rows: 20px 20px 38px 20px 20px 20px;
-  margin-left: 10px;
-  margin-right: 10px;
+  grid-template-rows: 22px 22px 38px 22px 22px 22px;
+  margin-left: 20px;
+  margin-right: 18px;
   height: 162px;
   margin-bottom: 20px;
+  
 }
 .sec-3-grid-item {
   border: 1px solid black;
-  /* padding: 5px; */
+  padding-left: 5px;
+  padding-bottom: 2px;
 }
 
 .sec-4 {
@@ -90,14 +98,14 @@ hr {
 
 }
 table, th, td {
-    border: 1px solid black;
-  }
+    border-collapse: collapse;
+}
 .sec-5 {
   display: grid;
   grid-template-columns: 2fr 1fr 150px;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 20px;
+  margin-right: 18px;
   height: 278px;
   margin-bottom: 10px;
   position: absolute;
@@ -108,3 +116,70 @@ table, th, td {
   border: 1px solid black;
   padding: 5px;
 }
+
+.table_head_color_border th{
+  background-color: rgb(46, 46, 242);
+  color: white;
+  border-color: black;
+}
+
+.table_body_bgcolor{
+  background-color: rgb(223, 223, 240);
+}
+
+
+td, th {
+  border:0;
+}
+
+
+.table_border_bottom { 
+  border-bottom:2px solid #1f1f1d;
+}
+
+.table_border_left{
+  border-left: 2px solid black;
+}
+.table_border_right{
+  border-right: 2px solid black;
+}
+
+.table_border_top{
+  border-top: 2px solid black;
+}
+
+.table_border{
+  border: 2px solid black;
+}
+
+
+
+
+.desc_width{
+  width: 400px;
+}
+
+.text_align_center{
+  text-align: center;
+}
+
+.font_header{
+  font-family: "Arvo", serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 30px;
+}
+
+.font_body,.font_sec_5{
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.font_sec_3 ,.font_sec_4 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 14px;
+}
+

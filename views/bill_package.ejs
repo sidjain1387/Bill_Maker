@@ -11,7 +11,7 @@
       <a href="/return_final_selected_bill_list"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return</button></a>
     </div>
     <page size="A4" id="content">
-      <div class="sec-1">
+      <div class="sec-1 font_body" style="margin-bottom: 5px;">
         <h5>PAN : AACFD8928N</h5>
         <div class="sec-1-1">
           <h5 class="sec-1-1-h3-top">Tax Invoice / Bill of Supply</h5>
@@ -22,9 +22,10 @@
           <h5 class="sec-1-2-h3-bottom">Duplicate for Record</h5>
         </div>
       </div>
-      <hr />
-      <div class="sec-2">
-        <h2>DREAM VISION HOLIDAYS</h2>
+      <hr/>
+
+      <div class="sec-2 font_body" style="margin-bottom: 5px;">
+        <h2 class="font_header" style="margin-top: 5px; margin-bottom: 3px;">DREAM VISION HOLIDAYS</h2>
         <h5>
           GF-11, II-A/19, Nehru Nagar, Near Jain Mandir Flyover, Amar Ujala
           Building, Ghaziabad-201001 (U.P)
@@ -39,8 +40,8 @@
         </h5>
         <h5>GSTIN : 09AACFD8928N1ZT &nbsp;&nbsp;&nbsp; TAN : MRTD09380A</h5>
       </div>
-      <hr />
-      <div class="sec-3">
+
+      <div class="sec-3 font_sec_3" style="margin-top: 5px;">
         <div class="sec-3-grid-item" style="text-align: center">
           Receipient Details
         </div>
@@ -64,75 +65,92 @@
         <div class="sec-3-grid-item">Tax is payable on Reverse Charge</div>
         <div class="sec-3-grid-item">No</div>
       </div>
-      <div class="sec-4">
+
+      <div class="sec-4 font_sec_4">
         <table class="table">
-          <thead>
+          <thead class="table_head_color_border">
               <tr>
-                  <th scope="col">SNo.</th>
-                  <th scope="col">Description Of Services</th>
-                  <th scope="col">SAC Code</th>
-                  <th scope="col">Qty/Unit</th>
-                  <th scope="col">Rate</th>
-                  <th scope="col">Total Value</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SNo.</th>
+                  <th scope="col" class="text_align_center desc_width table_border_bottom table_border_top table_border_left">Description Of Services</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SAC Code</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Qty/Unit</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Rate</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left table_border_right">Total Value</th>
               </tr>
           </thead>
-          <tbody>
+          <tbody class="table_body_bgcolor">
             <% let total=0;%>
                 <tr>
-                  <td><%=locals.sno%></td>
-                  <td><%=package_info.package_desc_1%></td>
+                  <td style="text-align: center;" class="table_border_left"><%=locals.sno%></td>
+                  <td class="table_border_left"><%=package_info.package_desc_1%></td>
+                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_sac_code%></td>
+                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_quantity%></td>
+                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_rate%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right"> <%=package_info.package_quantity*package_info.package_rate%></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=package_info.package_desc_2%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td class="table_border_left"><%=package_info.package_desc_2%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=package_info.package_desc_3%></td>
-                  <td style="text-align: center;"><%=package_info.package_sac_code%></td>
-                  <td style="text-align: center;"><%=package_info.package_quantity%></td>
-                  <td style="text-align: center;"><%=package_info.package_rate%></td>
-                  <td style="text-align: center;"><%=package_info.package_quantity*package_info.package_rate%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td class="table_border_left"><%=package_info.package_desc_3%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
                   <%total+=package_info.package_quantity*package_info.package_rate;%>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=package_info.package_desc_4%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td class="table_border_left"><%=package_info.package_desc_4%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=package_info.package_desc_5%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td class="table_border_left"><%=package_info.package_desc_5%></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
                 </tr>
                 <tr>
-                  <td></td>
-                  <td><%=package_info.package_desc_6%></td>
-                </tr>
-                
-                <tr>
-                  <td>&nbsp;&nbsp;&nbsp;</td>
-                  <td>&nbsp;&nbsp;&nbsp;</td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
+                  <td class="table_border_left table_border_bottom"><%=package_info.package_desc_6%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right table_border_bottom"></td>
                 </tr>
               <% sno++; %>
           </tbody>
       </table>
       </div>
 
-      <div class="sec-5">
+      <div class="sec-5 font_sec_5">
         <div class="sec-5-grid-item">Bank Details :</div>
         <%if(customer.customer_state_code==9){%>
           <%if(final_sac_code==440063){%>
+            <% let prev_total=total*0.025; %>
 
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
-            <div class="sec-5-grid-item">₹<%=total*0.025%></div>
-            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
-            <div class="sec-5-grid-item">₹<%=total*0.025%></div>
-            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 5%</div>
@@ -144,25 +162,25 @@
 
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
-            <%total=parseInt(total)+parseInt(parseInt(total)*0.025)%>
+            <%let prev_total=total*0.05;%>
+            <%total=parseInt(total)+parseInt(prev_total);%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
-                    <h6 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h6>
-                    <h6 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h6>
+                    <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
+                    <h4 style="margin-top: 0; margin-bottom: 0;">A/C No. 628605014121 IFSC Code: ICIC0006286</h4>
                 </div>
             </div>
             <div class="sec-5-grid-item">IGST @ 5%</div>
-            <div class="sec-5-grid-item">₹<%=total*0.05%></div>
+            <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
           <%}%>
 
         <%}%>
-        <div class="sec-5-grid-item" style="grid-row: 4/6;" id="amount">Amount in Words : </div>
+        <div class="sec-5-grid-item" style="grid-row: 4/6.5;" id="amount">Amount in Words : </div>
         <div class="sec-5-grid-item">Total : </div>
-        <div class="sec-5-grid-item" id="total_value">₹<%=total%></div>
+        <div class="sec-5-grid-item" id="total_value">₹<%=(total).toFixed(0)%></div>
         <div class="sec-5-grid-item" style="grid-column: 2/4; grid-row: 5/7; display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <h3>For Dream Vision Holidays</h3>
           <h4>Auth. Signatory</h4>
@@ -170,14 +188,14 @@
 
         <div class="sec-5-grid-item">
             <div style="display: flex; flex-direction: column;">
-                <h6 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h6>
+                <h4 style="margin-bottom: 0; margin-top: 2px;">E & O.E.</h4>
                 <ul style="margin-top: 0; margin-bottom: 0;">
                     <li>Subject to Ghaziabad Jurisdiction</li>
                     <li>Interest @ 21% p.a. will be charged if the bill is not paid within 7 days of presentation</li>
                 </ul>
             </div>
         </div>
-        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
+        <div class="sec-5-grid-item" style="grid-column: 1/4; text-align: center; font-weight: 500; background-color: rgb(46, 46, 242); color: white;">#Holiday Packages #Hotel bookings #International Tours #Star Cruises #Air Tickets #Railway Tickets</div>
       </div>
     </page>
     <script>
