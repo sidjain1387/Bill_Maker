@@ -122,11 +122,11 @@
           <% let prev_total=final_service_charge*0.09; %>
           <div class="sec-5-grid-item">SGST @ 9%</div>
           <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
-          <%total=parseInt(total)+parseInt(prev_total);%>
+          <%total=total+prev_total;%>
           <div class="sec-5-grid-item">Dream Vision Holidays</div>
           <div class="sec-5-grid-item">CGST @ 9%</div>
           <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
-          <%total=parseInt(total)+parseInt(prev_total);%>
+          <%total=total+prev_total;%>
           <div class="sec-5-grid-item">
               <div style="display: flex; flex-direction: column;">
                   <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
@@ -151,7 +151,7 @@
             </div>
             <div class="sec-5-grid-item">IGST @ 18%</div>
             <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
-            <%total=parseInt(total)+parseInt(prev_total);%>
+            <%total=total+prev_total;%>
 
 
         <%}%>

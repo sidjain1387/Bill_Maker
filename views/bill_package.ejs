@@ -140,13 +140,16 @@
           <%if(final_sac_code==440063){%>
             <% let prev_total=total*0.025; %>
 
+
             <div class="sec-5-grid-item">SGST @ 2.5%</div>
             <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
-            <%total=parseInt(total)+parseInt(prev_total);%>
+            <%total=total+prev_total;%>
+            <% console.log(total); %>
             <div class="sec-5-grid-item">Dream Vision Holidays</div>
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
             <div class="sec-5-grid-item">₹<%=prev_total.toFixed(2)%></div>
-            <%total=parseInt(total)+parseInt(prev_total);%>
+            <%total=total+prev_total;%>
+            <% console.log(total); %>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
                     <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
@@ -166,7 +169,7 @@
             <div class="sec-5-grid-item">CGST @ 2.5%</div>
             <div class="sec-5-grid-item">-</div>
             <%let prev_total=total*0.05;%>
-            <%total=parseInt(total)+parseInt(prev_total);%>
+            <%total=total+prev_total;%>
             <div class="sec-5-grid-item">
                 <div style="display: flex; flex-direction: column;">
                     <h4 style="margin-bottom: 0; margin-top: 2px;">ICICI Bank Ltd. R.D.C Raj Nagar Ghaziabad (U.P)</h4>
