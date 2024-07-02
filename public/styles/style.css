@@ -168,6 +168,9 @@ td, th {
   font-weight: 700;
   font-style: normal;
   font-size: 30px;
+  color: blue;
+  text-shadow: rgb(9, 9, 9) 1px 0 1px;
+
 }
 
 .font_body,.font_sec_5{
