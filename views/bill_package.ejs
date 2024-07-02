@@ -54,11 +54,13 @@
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
         </div>
+        <% if (customer.customer_state_code.toString().length==1){ customer.customer_state_code="0"+customer.customer_state_code;%>
+        <% } %>
         <div class="sec-3-grid-item">State: <%=customer.customer_state%></div>
         <div class="sec-3-grid-item">Code: <%=customer.customer_state_code%></div>
         <div class="sec-3-grid-item">
           State: <%=customer.customer_state%>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code:<%=customer.customer_state_code%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code: <%=customer.customer_state_code%>
         </div>
         <div class="sec-3-grid-item" style="grid-column: 2/4">GSTIN: <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">GSTIN: <%=customer.customer_gstin%></div>
@@ -81,54 +83,14 @@
           <tbody class="table_body_bgcolor">
             <% let total=0;%>
                 <tr>
-                  <td style="text-align: center;" class="table_border_left"><%=locals.sno%></td>
-                  <td class="table_border_left"><%=package_info.package_desc_1%></td>
-                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_sac_code%></td>
-                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_quantity%></td>
-                  <td style="text-align: center;" class="table_border_left"><%=package_info.package_rate%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right"> <%=package_info.package_quantity*package_info.package_rate%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=locals.sno%></td>
+                  <td class="table_border_left table_border_bottom"><%=package_info.package_desc_1%> <%=package_info.package_desc_2%> <%=package_info.package_desc_3%> <%=package_info.package_desc_4%> <%=package_info.package_desc_5%> <%=package_info.package_desc_6%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_sac_code%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_quantity%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_rate%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right table_border_bottom"> <%=package_info.package_quantity*package_info.package_rate%></td>
                 </tr>
-                <tr>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td class="table_border_left"><%=package_info.package_desc_2%></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td class="table_border_left"><%=package_info.package_desc_3%></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
-                  <%total+=package_info.package_quantity*package_info.package_rate;%>
-                </tr>
-                <tr>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td class="table_border_left"><%=package_info.package_desc_4%></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td class="table_border_left"><%=package_info.package_desc_5%></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right"></td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
-                  <td class="table_border_left table_border_bottom"><%=package_info.package_desc_6%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right table_border_bottom"></td>
-                </tr>
+                <%total+=package_info.package_quantity*package_info.package_rate;%>
               <% sno++; %>
           </tbody>
       </table>

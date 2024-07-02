@@ -133,6 +133,7 @@ td, th {
 }
 
 
+
 .table_border_bottom { 
   border-bottom:2px solid #1f1f1d;
 }
@@ -186,3 +187,6 @@ td, th {
   font-size: 14px;
 }
 
+td {
+  white-space: normal; /* Ensures wrapping */
+}

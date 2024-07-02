@@ -53,11 +53,13 @@
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
         </div>
+        <% if (customer.customer_state_code.toString().length==1){ customer.customer_state_code="0"+customer.customer_state_code;%>
+          <% } %>
         <div class="sec-3-grid-item">State: <%=customer.customer_state%></div>
         <div class="sec-3-grid-item">Code: <%=customer.customer_state_code%></div>
         <div class="sec-3-grid-item">
           State: <%=customer.customer_state%>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code:<%=customer.customer_state_code%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code: <%=customer.customer_state_code%>
         </div>
         <div class="sec-3-grid-item" style="grid-column: 2/4">GSTIN: <%=customer.customer_gstin%></div>
         <div class="sec-3-grid-item">GSTIN: <%=customer.customer_gstin%></div>
@@ -72,7 +74,7 @@
                   <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SNo.</th>
                   <th scope="col" class="text_align_center desc_width table_border_bottom table_border_top table_border_left">Description Of Services</th>
                   <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">SAC Code</th>
-                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Qty/Unit</th>
+                  <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Qty/Nights</th>
                   <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left">Rate</th>
                   <th scope="col" class="text_align_center table_border_bottom table_border_top table_border_left table_border_right">Total Value</th>
               </tr>
@@ -82,31 +84,14 @@
 
             <% final_final_hotel_booking.forEach((ticket)=>{ %>
                 <tr>
-                  <td class="text_align_center table_border_left"><%=locals.sno%></td>
-                  <td class="table_border_left"><%=ticket.hotel_booking_customer_name%></td>
-                  <td class="text_align_center table_border_left"><%=ticket.hotel_sac_code%></td>
-                  <td class="text_align_center table_border_left"><%=ticket.hotel_quantity%></td>
-                  <td class="text_align_center table_border_left">₹<%=ticket.hotel_rate%></td>
-                  <td class="text_align_center table_border_left table_border_right">₹<%=ticket.hotel_quantity*ticket.hotel_rate%></td>
+                  <td class="text_align_center table_border_left table_border_bottom"><%=locals.sno%></td>
+                  <td class="table_border_left table_border_bottom"><%=ticket.hotel_booking_customer_name%> &nbsp;&nbsp; <%=ticket.hotel_name%> &nbsp;&nbsp; <%=ticket.hotel_location%> &nbsp;&nbsp; Check In-<%=ticket.hotel_check_in_date%> &nbsp;&nbsp; Check out-<%=ticket.hotel_check_out_date%> &nbsp;&nbsp; Nights-<%=ticket.hotel_nights%>  </td>
+                  <td class="text_align_center table_border_left table_border_bottom"><%=ticket.hotel_sac_code%></td>
+                  <td class="text_align_center table_border_left table_border_bottom"><%=ticket.hotel_quantity%></td>
+                  <td class="text_align_center table_border_left table_border_bottom">₹<%=ticket.hotel_rate%></td>
+                  <td class="text_align_center table_border_left table_border_right table_border_bottom">₹<%=ticket.hotel_quantity*ticket.hotel_rate%></td>
                 </tr>
-                <tr>
-                  <td class="text_align_center table_border_left"></td>
-                  <td class="table_border_left"><%=ticket.hotel_name%> &nbsp; <%=ticket.hotel_location%> &nbsp; <%=ticket.hotel_nights%> Nights</td>
-                  <td class="text_align_center table_border_left"></td>
-                  <td class="text_align_center table_border_left"></td>
-                  <td class="text_align_center table_border_left"></td>
-                  <td class="text_align_center table_border_left table_border_right"></td>
-                  <%total=total+parseInt((ticket.hotel_quantity) * (ticket.hotel_rate)) %>
-
-                </tr>
-                <tr>
-                  <td class="text_align_center table_border_left table_border_bottom"></td>
-                  <td class="table_border_left table_border_bottom">Check In-<%=ticket.hotel_check_in_date%> Check out-<%=ticket.hotel_check_out_date%></td>
-                  <td class="text_align_center table_border_left table_border_bottom"></td>
-                  <td class="text_align_center table_border_left table_border_bottom"></td>
-                  <td class="text_align_center table_border_left table_border_bottom"></td>
-                  <td class="text_align_center table_border_left table_border_right table_border_bottom"></td>
-                </tr>
+                <%total=total+parseInt((ticket.hotel_quantity) * (ticket.hotel_rate)) %>
               <% sno++; %>
             <%});%>
             <%let hotel_total=total;%>

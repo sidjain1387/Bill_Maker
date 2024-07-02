@@ -56,6 +56,8 @@
         <div class="sec-3-grid-item" style="grid-row: 3/5; grid-column: 2/4">
           Address of Delivery: <%=customer.customer_address%>
         </div>
+        <% if (customer.customer_state_code.toString().length==1){ customer.customer_state_code="0"+customer.customer_state_code;%>
+        <% } %>
         <div class="sec-3-grid-item">State: <%=customer.customer_state%></div>
         <div class="sec-3-grid-item">Code: <%=customer.customer_state_code%></div>
         <div class="sec-3-grid-item">
@@ -84,22 +86,14 @@
             <% let total=0;%>
             <% air_ticket.forEach(function(ticket) { %>
               <tr>
-                <td class="text_align_center table_border_left"><%=locals.sno%></td>
-                <td class=" table_border_left"><%=ticket.air_ticket_customer_name%>&nbsp; PNR:<%=ticket.flight_pnr%></td>
-                <td class="text_align_center table_border_left"><%=ticket.flight_sac_code%></td>
-                <td class="text_align_center table_border_left"><%=ticket.flight_quantity%></td>
-                <td class="text_align_center table_border_left">₹<%=ticket.flight_rate%></td>
-                <td class="text_align_center table_border_left table_border_right">₹<%= ticket.flight_quantity * ticket.flight_rate  %></td>
+                <td class="text_align_center table_border_left table_border_bottom"><%=locals.sno%></td>
+                <td class="table_border_left table_border_bottom word-wrap-example"><%=ticket.air_ticket_customer_name%> &nbsp;&nbsp; PNR:<%=ticket.flight_pnr%> &nbsp;&nbsp; <%=ticket.flight_travel_location%> &nbsp;&nbsp; <%=ticket.flight_number%> &nbsp;&nbsp; <%=ticket.flight_date%> &nbsp;&nbsp; <%=ticket.flight_time%></td>
+                <td class="text_align_center table_border_left table_border_bottom"><%=ticket.flight_sac_code%></td>
+                <td class="text_align_center table_border_left table_border_bottom"><%=ticket.flight_quantity%></td>
+                <td class="text_align_center table_border_left table_border_bottom">₹<%=ticket.flight_rate%></td>
+                <td class="text_align_center table_border_left table_border_right table_border_bottom">₹<%= ticket.flight_quantity * ticket.flight_rate  %></td>
               </tr>
-              <tr>
-                <td class="text_align_center table_border_left table_border_bottom"></td>
-                <td class="table_border_left table_border_bottom"><%=ticket.flight_travel_location%> &nbsp; <%=ticket.flight_number%> &nbsp;<%=ticket.flight_date%>&nbsp; <%=ticket.flight_time%> </td>
-                <td class="text_align_center table_border_left table_border_bottom"></td>
-                <td class="text_align_center table_border_left table_border_bottom"></td> 
-                <td class="text_align_center table_border_left table_border_bottom"></td>
-                <td class="text_align_center table_border_left table_border_right table_border_bottom"></td>
-                <%total=total+parseInt((ticket.flight_quantity) * (ticket.flight_rate)) %>
-              </tr>
+              <%total=total+parseInt((ticket.flight_quantity) * (ticket.flight_rate)) %>
 
               <% sno++; %>
             <%});%>
