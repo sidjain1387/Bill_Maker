@@ -1,4 +1,4 @@
-database name = bill;
+database name = Bill;
 
 create table package_info(
 package_id serial Primary key,
