@@ -189,4 +189,5 @@ td, th {
 
 td {
   white-space: normal; /* Ensures wrapping */
+  text-wrap: wrap;
 }
