@@ -3,7 +3,6 @@ import ejs from "ejs";
 import pg from "pg";
 import bodyParser from "body-parser";
 
-
 const app= express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -62,7 +61,14 @@ app.get("/preprebill",async(req,res)=>{
 app.get("/selected_bill_list",async(req,res)=>{
     let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
     let bill_status=2;
-    res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status});
+    let bill_id=req.body.bill_id;
+    try{
+        let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
+        res.render("bill_list.ejs",{customers:all_customers.rows,bill_status:bill_status,bill:bill.rows});
+    }
+    catch(err){
+        console.log(err);
+    }  
 })
 
 
@@ -110,6 +116,11 @@ app.get("/delete_bill",async(req,res)=>{
     res.render("delete_bill.ejs",{bill:bill.rows,customers:customer,delete_bill:delete_bill});
 })
 
+app.get("/edit_bill",async(req,res)=>{
+    let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
+    const customer= await customers();
+    res.render("edit_1_bill.ejs",{bill:bill.rows,customers:customer});
+})
 
 
 
@@ -480,6 +491,16 @@ app.post("/delete_selected_hotel_booking",async(req,res)=>{
 app.post("/delete_selected_bill",async(req,res)=>{
     let bill_id=req.body.bill_id;
     const customer= await customers();
+    let booking_type=await db.query("SELECT bill_booking_type FROM bill_info WHERE bill_id=$1",[parseInt(bill_id)]);
+    if(booking_type.rows[0].bill_booking_type==1){
+        await db.query("UPDATE air_ticket SET air_ticket_bill_id=NULL WHERE air_ticket_bill_id=$1",[parseInt(bill_id)]);
+    }
+    else if(booking_type.rows[0].bill_booking_type==2){
+        await db.query("UPDATE hotel_booking SET hotel_booking_bill_id=NULL WHERE hotel_booking_bill_id=$1",[parseInt(bill_id)]);
+    }
+    else if(booking_type.rows[0].bill_booking_type==3){
+        await db.query("UPDATE package_info SET package_bill_id=NULL WHERE package_bill_id=$1",[parseInt(bill_id)]);
+    }
     try{
         await db.query("DELETE FROM bill_info WHERE bill_id=$1;",[parseInt(bill_id)]);
         let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
@@ -490,6 +511,13 @@ app.post("/delete_selected_bill",async(req,res)=>{
         let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
         res.render("delete_bill.ejs",{bill:bill.rows,customers:customer});
     }    
+})
+
+app.post("/edit_selected_bill",async(req,res)=>{
+    let bill_id=req.body.bill_id;
+    const customer= await customers();
+    let bill=await db.query("SELECT * FROM bill_info WHERE bill_id=$1",[parseInt(bill_id)]);
+    res.render("edit_2_bill.ejs",{bill:bill.rows[0],customer:customer});
 })
 
 let selected_customer_id=0;
@@ -802,6 +830,12 @@ app.post("/final_edit_selected_package",async(req,res)=>{
 
 })
 
+app.post("/final_edit_selected_bill",async(req,res)=>{
+    const bill_id=req.body.bill_id;
+    const bill_date=req.body.bill_date;
+    await db.query("UPDATE bill_info SET bill_date=$1 WHERE bill_id=$2;",[bill_date,bill_id]);
+    res.redirect("/selected_bill_list");
+})
 
 
 app.listen(3000,()=>{

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrePreBill</title>
+ 
+
+</head>
+<body>
+  <%-include("partials/header.ejs")%>
+
+  <div class="container">
+
+    
+    <form class="row g-3" method="post" action="/final_edit_selected_bill">
+      <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill No.</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_id" value="<%=bill.bill_id%>">
+        </div>
+        <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill Date</label>
+          <input type="date" class="form-control border border-success" id="inputEmail4" name="bill_date" value="<%=bill.bill_date%>">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">SUBMIT</button>
+        </div>
+      </form>
+      
+      <br>
+      <br>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Biller Id</th>
+            <th scope="col">Biller Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% customer.forEach((customer)=>{%>
+            <tr>
+              <th scope="row"><%=customer.customer_id%></th>
+              <td><%=customer.customer_name%></td>
+            </tr>
+            <%});%>
+          </tbody>
+        </table>
+        <br>
+        <br>
+      </div>
+</body>
+
+</html>

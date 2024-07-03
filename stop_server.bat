@@ -1,0 +1,3 @@
+@echo off
+echo Simulating Ctrl+C in 5 seconds...
+powershell -Command "Start-Sleep -Seconds 5; Stop-Process -Id $PID"

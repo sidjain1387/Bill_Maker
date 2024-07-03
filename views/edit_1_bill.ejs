@@ -10,16 +10,8 @@
 <body>
   <%-include("partials/header.ejs")%>
   <div class="container">
-    <%if(locals.delete_bill==1){%>
-        <h3>Bill Cannot be deleted</h3>
-    <%}else if(locals.delete_bill==0){%>
-        <h3></h3>
-    <%}else{%>
-        <h3>Bill Deleted</h3>
-    <%}%>
-
     
-    <form class="row g-3" method="post" action="/delete_selected_bill">
+    <form class="row g-3" method="post" action="/edit_selected_bill">
 
       
         <div class="col-md-4">
@@ -27,7 +19,7 @@
           <input type="number" class="form-control border border-success" id="inputEmail4" name="bill_id">
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary">DELETE</button>
+          <button type="submit" class="btn btn-primary">EDIT</button>
         </div>
       </form>
       
