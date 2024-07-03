@@ -61,10 +61,13 @@
                         <th scope="col">Customer Name</th>
                         <th scope="col">Bill Date</th>
                         <th scope="col">Bill Service Charge</th>
+                        <th scope="col">Bill Total</th>
                         <th scope="col">Bill PDF</th>
                     </tr>
                 </thead>
                 <tbody>
+                  <%let total_bills=0;%>
+                  <%let bills_total_cost=0;%>
 
                     <% bill.forEach(function(bill) { %>
                         <%customers.forEach(function(customer){%>
@@ -74,6 +77,9 @@
                                 <td><%=customer.customer_name%></td>
                                 <td><%=bill.bill_date.toLocaleDateString()%></td>
                                 <td>₹<%=bill.bill_service_charge%></td>
+                                <td>₹<%=bill.bill_total_cost%></td>
+                                <%total_bills++;%>
+                                <%bills_total_cost+=bill.bill_total_cost;%>
                                 <%if(bill.bill_booking_type==2){%>
                                     <form action="/selected_hotel_bill" method="POST">
                                         <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
@@ -95,6 +101,13 @@
                         </tr>
                         <%});%>
                     <%});%>
+                    <tr>
+                      <td><b>Total No. of Bills</b></td>
+                      <td><b><%= total_bills %></b></td>
+                      <td></td>
+                      <td><b>Total Cost</b></td>
+                      <td><b><%=bills_total_cost%></b></td>
+                    </tr>
                 </tbody>
             </table>
             <%}%>

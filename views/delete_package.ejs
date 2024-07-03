@@ -38,24 +38,35 @@
                         <th scope="col">Package Quantity</th>
                         <th scope="col">Package Rate</th>
                         <th scope="col">Package SAC Code</th>
-                        <th scope="col">Package Biller Id</th>
+                        <th scope="col">Biller Name</th>
+                        <th scope="col">Total Cost</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <%let total_packages=0;%>
+                    <%let total_cost=0;%>
                     <% package_info.forEach(function(ticket) { %>
-                        <tr>
-                            <td><%=ticket.package_id%></td>
-                            <td><%=ticket.package_desc_1%></td>
-                            <td><%=ticket.package_desc_2%></td>
-                            <td><%=ticket.package_desc_3%></td>
-                            <td><%=ticket.package_desc_4%></td>
-                            <td><%=ticket.package_desc_5%></td>
-                            <td><%=ticket.package_desc_6%></td>
-                            <td><%=ticket.package_quantity%></td>
-                            <td><%=ticket.package_rate%></td>
-                            <td><%=ticket.package_sac_code%></td>
-                            <td><%=ticket.package_biller_id%></td>
-                        </tr>
+                        <%customers.forEach(function(customer){%>
+                            <%if(customer.customer_id==ticket.package_biller_id){%>
+                                
+                                <tr>
+                                    <td><%=ticket.package_id%></td>
+                                    <td><%=ticket.package_desc_1%></td>
+                                    <td><%=ticket.package_desc_2%></td>
+                                    <td><%=ticket.package_desc_3%></td>
+                                    <td><%=ticket.package_desc_4%></td>
+                                    <td><%=ticket.package_desc_5%></td>
+                                    <td><%=ticket.package_desc_6%></td>
+                                    <td><%=ticket.package_quantity%></td>
+                                    <td><%=ticket.package_rate%></td>
+                                    <td><%=ticket.package_sac_code%></td>
+                                    <td><%=customer.customer_name%></td>
+                                    <td>₹<%=ticket.package_quantity*ticket.package_rate%></td>
+                                </tr>
+                                <%total_packages+=1;%>
+                                <%total_cost+=(ticket.package_quantity*ticket.package_rate);%>
+                            <% }; %>
+                        <% }); %>
                     <%});%>
                 </tbody>
             </table>

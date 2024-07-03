@@ -88,25 +88,31 @@ app.get("/delete_customer",async(req,res)=>{
 app.get("/delete_air_ticket",async(req,res)=>{
     let air_tickets=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
     let delete_air=0;
-    res.render("delete_air_ticket.ejs",{air_ticket:air_tickets.rows,delete_air:delete_air});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("delete_air_ticket.ejs",{air_ticket:air_tickets.rows,delete_air:delete_air,customers:all_customers.rows});
 })
 
 app.get("/air_ticket_list",async(req,res)=>{
     let air_ticket=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
-    res.render("air_ticket_list.ejs",{air_ticket:air_ticket.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("air_ticket_list.ejs",{air_ticket:air_ticket.rows,customers:all_customers.rows});
 
 })
 
 app.get("/hotel_booking_list",async(req,res)=>{
     let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
-    res.render("hotel_booking_list.ejs",{hotel_booking:hotel_booking.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+    res.render("hotel_booking_list.ejs",{hotel_booking:hotel_booking.rows,customers:all_customers.rows});
 })
 
 app.get("/delete_hotel_booking",async(req,res)=>{
     let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc");
     let delete_hotel=0;
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
 
-    res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,delete_hotel:delete_hotel});
+    res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,delete_hotel:delete_hotel,customers:all_customers.rows});
 })
 
 app.get("/delete_bill",async(req,res)=>{
@@ -463,13 +469,11 @@ app.post("/delete_selected_air_ticket",async(req,res)=>{
     let air_ticket_id=req.body.air_ticket_id;
     try{
         await db.query("DELETE FROM air_ticket WHERE air_ticket_id=$1;",[parseInt(air_ticket_id)]);
-        let air_ticket=await db.query("SELECT * FROM air_ticket;");
-        res.render("delete_air_ticket.ejs",{air_ticket:air_ticket.rows});
+        res.redirect("/delete_air_ticket");
     }
     catch(err){
         let delete_air=1;
-        let air_ticket=await db.query("SELECT * FROM air_ticket;");
-        res.render("delete_air_ticket.ejs",{air_ticket:air_ticket.rows,delete_air:delete_air});
+        res.redirect("/delete_air_ticket");
     }
 })
 
@@ -478,13 +482,11 @@ app.post("/delete_selected_hotel_booking",async(req,res)=>{
     let hotel_booking_id=req.body.hotel_booking_id;
     try{
         await db.query("DELETE FROM hotel_booking WHERE hotel_booking_id=$1;",[parseInt(hotel_booking_id)]);
-        let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
-        res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows});
+        res.redirect("/delete_hotel_booking");
     }
     catch(err){
         let delete_hotel=1;
-        let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
-        res.render("delete_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,delete_hotel:delete_hotel});
+        res.redirect("/delete_hotel_booking");
     }
 })
 
@@ -677,7 +679,9 @@ app.post("/selected_package",async (req,res)=>{
 
 app.get("/edit_air_ticket",async(req,res)=>{
     let air_tickets=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
-    res.render("edit_1_air_ticket.ejs",{air_ticket:air_tickets.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("edit_1_air_ticket.ejs",{air_ticket:air_tickets.rows,customers:all_customers.rows});
 })
 
 let selected_to_edit_air_ticket=0;
@@ -731,7 +735,9 @@ app.post("/final_edit_selected_customer",async(req,res)=>{
 
 app.get("/edit_hotel_booking",async(req,res)=>{
     let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
-    res.render("edit_1_hotel_booking.ejs",{hotel_booking:hotel_booking.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("edit_1_hotel_booking.ejs",{hotel_booking:hotel_booking.rows,customers:all_customers.rows});
 })
 
 let selected_to_edit_hotel_booking=0;
@@ -781,19 +787,23 @@ app.post("/add_package",async(req,res)=>{
 
 app.get("/package_list",async(req,res)=>{
     let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
-    res.render("package_list.ejs",{package_info:package_info.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("package_list.ejs",{package_info:package_info.rows,customers:all_customers.rows});
 })
 
 app.get("/delete_package",async(req,res)=>{
     let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
-    res.render("delete_package.ejs",{package_info:package_info.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("delete_package.ejs",{package_info:package_info.rows,customers:all_customers.rows});
 })
 
 app.post("/delete_selected_package",async(req,res)=>{
     let package_id=req.body.package_id;
     try{
         await db.query("DELETE FROM package_info WHERE package_id=$1;",[package_id]);
-        res.redirect("/package_list");
+        res.redirect("/delete_package");
     }
     catch(err){
         console.log(err);
@@ -804,7 +814,9 @@ app.post("/delete_selected_package",async(req,res)=>{
 
 app.get("/edit_package",async(req,res)=>{
     let package_info=await db.query("SELECT * FROM package_info order by package_id desc;");
-    res.render("edit_1_package.ejs",{package_info:package_info.rows});
+    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+
+    res.render("edit_1_package.ejs",{package_info:package_info.rows,customers:all_customers.rows});
 })
 let selected_to_edit_package_id=0;
 app.post("/edit_selected_package",async(req,res)=>{
@@ -826,7 +838,7 @@ app.post("/final_edit_selected_package",async(req,res)=>{
     const package_sac_code=req.body.package_sac_code;
     const package_biller_id=req.body.package_biller_id;
     await db.query("UPDATE package_info SET package_desc_1=$1,package_desc_2=$2,package_desc_3=$3,package_desc_4=$4,package_desc_5=$5,package_desc_6=$6,package_quantity=$7,package_rate=$8,package_sac_code=$9,package_biller_id=$10 WHERE package_id=$11;",[package_desc_1,package_desc_2,package_desc_3,package_desc_4,package_desc_5,package_desc_6,package_quantity,package_rate,package_sac_code,package_biller_id,selected_to_edit_package_id]);
-    res.redirect("/package_list");
+    res.redirect("/edit_package");
 
 })
 
@@ -837,6 +849,27 @@ app.post("/final_edit_selected_bill",async(req,res)=>{
     res.redirect("/selected_bill_list");
 })
 
+app.post("/return_air_ticket_list",async(req,res)=>{
+    let total_cost=req.body.bill_total_cost;
+    let bill_id=req.body.bill_id;
+    console.log("total cost",total_cost);
+    await db.query("UPDATE bill_info SET bill_total_cost=$1 WHERE bill_id=$2;",[total_cost,bill_id]);
+    res.redirect("/selected_bill_list");
+})
+
+app.post("/return_hotel_booking_list",async(req,res)=>{
+    let total_cost=req.body.bill_total_cost;
+    let bill_id=req.body.bill_id;
+    await db.query("UPDATE bill_info SET bill_total_cost=$1 WHERE bill_id=$2;",[total_cost,bill_id]);
+    res.redirect("/selected_bill_list");
+})
+
+app.post("/return_package_list",async(req,res)=>{
+    let total_cost=req.body.bill_total_cost;
+    let bill_id=req.body.bill_id;
+    await db.query("UPDATE bill_info SET bill_total_cost=$1 WHERE bill_id=$2;",[total_cost,bill_id]);
+    res.redirect("/selected_bill_list");
+})
 
 app.listen(3000,()=>{
     console.log("Server is running on port 3000");

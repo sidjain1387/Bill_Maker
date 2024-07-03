@@ -8,7 +8,11 @@
   <body>
     <div style="display: flex;justify-content: center; padding: 10px 10px;">
       <button id="download" style="font-weight: 600; font-size: larger;background-color: aqua;">Download PDF</button>
-      <a href="/return_final_selected_bill_list"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return</button></a>
+      <form action="/return_hotel_booking_list" method="POST">
+        <input type="hidden" name="bill_total_cost"  id="total_cost_to_insert">
+        <input type="hidden" name="bill_id" value="<%= billno %>">
+        <td><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;" type="submit">Return</button></td>
+      </form>
     </div>
     <page size="A4" id="content">
       <div class="sec-1 font_body" style="margin-bottom: 5px;">
@@ -218,7 +222,7 @@
             const imgData = canvas.toDataURL("image/png");
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+            doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight,undefined,'SLOW');
             doc.save("<%=customer.customer_name%> Bill no:<%=billno%>.pdf");
           });
         });
@@ -236,6 +240,10 @@
           }
         }
         document.getElementById("amount").innerText="Amount In Words: "+amount_in_words;
+        let stringValue = document.getElementById("total_value").innerText;
+        let numericValue = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
+
+        document.getElementById("total_cost_to_insert").value=numericValue;
     </script>
   </body>
 </html>

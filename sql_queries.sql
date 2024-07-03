@@ -65,3 +65,4 @@ create table customer_info(
     customer_state_code int,
     customer_gstin text
 );
+alter table bill_info add column bill_total_cost int;

@@ -23,6 +23,7 @@
           </tr>
         </thead>
         <tbody>
+          <% let total_customer=0; %>
           <% customer.forEach((customer)=>{%>
             <tr>
               <th scope="row"><%=customer.customer_id%></th>
@@ -31,12 +32,20 @@
               <td><%=customer.customer_gstin%></td>
               <td><%=customer.customer_state%></td>
             </tr>
-            <%});%>
-          </tbody>
-        </table>
-        <br>
-        <br>
-      </div>
+            <% total_customer+=1; %>
+          <%});%>
+          <th scope="row"></th>
+          <td><b>Total No. of Customers</b></td>
+          <td><b><%=total_customer%></b></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </tbody>
+
+      </table>
+      <br>
+      <br>
+    </div>
 </body>
 
 </html>

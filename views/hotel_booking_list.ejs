@@ -26,25 +26,50 @@
                         <th scope="col">Hotel Quantity</th>
                         <th scope="col">Hotel Rate</th>
                         <th scope="col">Hotel SAC Code</th>
+                        <th scope="col">Biller Name</th>
+                        <th scope="col">Total Cost</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <%let total_hotel_bookings=0;%>
+                    <%let total_cost=0;%>
                     
                     <% hotel_booking.forEach(function(booking) { %>
-                        <tr>
-                            
-                            <td><%=booking.hotel_booking_id%></td>
-                            <td><%=booking.hotel_booking_customer_name%></td>
-                            <td><%=booking.hotel_name%></td>
-                            <td><%=booking.hotel_location%></td>
-                            <td><%=booking.hotel_nights%></td>
-                            <td><%=booking.hotel_check_in_date%></td>
-                            <td><%=booking.hotel_check_out_date%></td>
-                            <td><%=booking.hotel_quantity%></td>
-                            <td><%=booking.hotel_rate%></td>
-                            <td><%=booking.hotel_sac_code%></td>
-                        </tr>
+                        <%customers.forEach(function(customer){%>
+                            <%if(customer.customer_id==booking.hotel_booking_biller_id){%>
+                                <tr>                                   
+                                    <td><%=booking.hotel_booking_id%></td>
+                                    <td><%=booking.hotel_booking_customer_name%></td>
+                                    <td><%=booking.hotel_name%></td>
+                                    <td><%=booking.hotel_location%></td>
+                                    <td><%=booking.hotel_nights%></td>
+                                    <td><%=booking.hotel_check_in_date%></td>
+                                    <td><%=booking.hotel_check_out_date%></td>
+                                    <td><%=booking.hotel_quantity%></td>
+                                    <td><%=booking.hotel_rate%></td>
+                                    <td><%=booking.hotel_sac_code%></td>
+                                    <td><%=customer.customer_name%></td>
+                                    <td>₹<%=booking.hotel_quantity*booking.hotel_rate%></td>
+                                </tr>
+                                <% total_hotel_bookings+=1; %>
+                                <% total_cost+=booking.hotel_quantity*booking.hotel_rate; %>
+                            <% }; %>
+                        <% }); %>
                     <%});%>
+                    <tr>
+                        <td><b>Total No. of Hotel Bookings</b></td>
+                        <td><b><%=total_hotel_bookings%></b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>Total Cost</b></td>
+                        <td><b>₹<%=total_cost%></b></td>
+                    </tr>
                 </tbody>
             </table>
             <br>

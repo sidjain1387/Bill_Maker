@@ -26,7 +26,7 @@
       
       <br>
       <br>
-      <h3>Air Tickets</h3>
+      <h3>Air Tickets List</h3>
             <table class="table">
                 <thead>
                     <tr>
@@ -40,26 +40,41 @@
                         <th scope="col">Flight Quantity</th>
                         <th scope="col">Flight Rate</th>
                         <th scope="col">Flight SAC Code</th>
+                        <th scope="col">Biller Name</th>
+                        <th scope="col">Total Cost</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <%let total_airtickets=0;%>
+                    <%let total_cost=0;%>
                     <% air_ticket.forEach(function(ticket) { %>
-                        <tr>
-                            
-                            <td><%=ticket.air_ticket_id%></td>
-                            <td><%=ticket.air_ticket_customer_name%></td>
-                            <td><%=ticket.flight_number%></td>
-                            <td><%=ticket.flight_date%></td>
-                            <td><%=ticket.flight_time%></td>
-                            <td><%=ticket.flight_pnr%></td>
-                            <td><%=ticket.flight_travel_location%></td>
-                            <td><%=ticket.flight_quantity%></td>
-                            <td><%=ticket.flight_rate%></td>
-                            <td><%=ticket.flight_sac_code%></td>
-                        </tr>
+                        <%customers.forEach(function(customer){%>
+                            <%if(customer.customer_id==ticket.air_ticket_biller_id){%>
+                                <tr>
+                                    
+                                    <td><%=ticket.air_ticket_id%></td>
+                                    <td><%=ticket.air_ticket_customer_name%></td>
+                                    <td><%=ticket.flight_number%></td>
+                                    <td><%=ticket.flight_date%></td>
+                                    <td><%=ticket.flight_time%></td>
+                                    <td><%=ticket.flight_pnr%></td>
+                                    <td><%=ticket.flight_travel_location%></td>
+                                    <td><%=ticket.flight_quantity%></td>
+                                    <td><%=ticket.flight_rate%></td>
+                                    <td><%=ticket.flight_sac_code%></td>
+                                    <td><%=customer.customer_name%></td>
+                                    <td>₹<%=ticket.flight_quantity*ticket.flight_rate%></td>
+                                    <%total_airtickets+=1;%>
+                                    <%total_cost+=(ticket.flight_quantity*ticket.flight_rate);%>
+                                </tr>
+                            <%}%>
+                        <% }); %>
                     <%});%>
+                    <hr>
+
                 </tbody>
             </table>
+
         <br>
         <br>
       </div>

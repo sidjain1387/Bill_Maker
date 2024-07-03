@@ -7,8 +7,13 @@
   </head>
   <body>
     <div style="display: flex;justify-content: center; padding: 10px 10px;">
+      <% let total=0;%>
       <button id="download" style="font-weight: 600; font-size: larger;background-color: aqua;">Download PDF</button>
-      <a href="/return_final_selected_bill_list"><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;">Return</button></a>
+      <form action="/return_air_ticket_list" method="POST">
+        <input type="hidden" name="bill_total_cost"  id="total_cost_to_insert">
+        <input type="hidden" name="bill_id" value="<%= billno %>">
+        <td><button style="font-weight: 600; font-size: larger;background-color: aqua; margin-left: 10px;" type="submit">Return</button></td>
+      </form>
     </div>
     
     <page size="A4" id="content">
@@ -83,11 +88,10 @@
               </tr>
           </thead>
           <tbody class="table_body_bgcolor">
-            <% let total=0;%>
             <% air_ticket.forEach(function(ticket) { %>
               <tr>
                 <td class="text_align_center table_border_left table_border_bottom"><%=locals.sno%></td>
-                <td class="table_border_left table_border_bottom word-wrap-example"><%=ticket.air_ticket_customer_name%> &nbsp;&nbsp; PNR:<%=ticket.flight_pnr%> &nbsp;&nbsp; <%=ticket.flight_travel_location%> &nbsp;&nbsp; <%=ticket.flight_number%> &nbsp;&nbsp; <%=ticket.flight_date%> &nbsp;&nbsp; <%=ticket.flight_time%></td>
+                <td class="table_border_left table_border_bottom word-wrap-example"><%=ticket.air_ticket_customer_name%> &nbsp;&nbsp; PNR:<%=ticket.flight_pnr%> &nbsp;&nbsp; <%=ticket.flight_travel_location%> &nbsp;&nbsp; <%=ticket.flight_number%> &nbsp;&nbsp; <%=ticket.flight_date%> &nbsp;&nbsp; Dep. <%=ticket.flight_time%>HRS</td>
                 <td class="text_align_center table_border_left table_border_bottom"><%=ticket.flight_sac_code%></td>
                 <td class="text_align_center table_border_left table_border_bottom"><%=ticket.flight_quantity%></td>
                 <td class="text_align_center table_border_left table_border_bottom">₹<%=ticket.flight_rate%></td>
@@ -183,7 +187,7 @@
             const imgData = canvas.toDataURL("image/png");
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+            doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight,undefined,'SLOW');
             
             doc.save("<%=customer.customer_name%> Bill no:<%=billno%>.pdf");
           });
@@ -203,6 +207,10 @@
           }
         }
         document.getElementById("amount").innerText="Amount In Words: "+amount_in_words;
+        let stringValue = document.getElementById("total_value").innerText;
+        let numericValue = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
+
+        document.getElementById("total_cost_to_insert").value=numericValue;
     </script>
   </body>
 </html>
