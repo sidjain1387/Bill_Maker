@@ -86,16 +86,19 @@
           </thead>
           <tbody class="table_body_bgcolor">
             <% let total=0;%>
+            <% package_info.forEach((ticket)=>{ %>
+
                 <tr>
                   <td style="text-align: center;" class="table_border_left table_border_bottom"><%=locals.sno%></td>
-                  <td class="table_border_left table_border_bottom"><%=package_info.package_desc_1%> <%=package_info.package_desc_2%> <%=package_info.package_desc_3%> <%=package_info.package_desc_4%> <%=package_info.package_desc_5%> <%=package_info.package_desc_6%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_sac_code%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_quantity%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=package_info.package_rate%></td>
-                  <td style="text-align: center;" class="table_border_left table_border_right table_border_bottom"> <%=package_info.package_quantity*package_info.package_rate%></td>
+                  <td class="table_border_left table_border_bottom"><%=ticket.package_desc_1%> <%=ticket.package_desc_2%> <%=ticket.package_desc_3%> <%=ticket.package_desc_4%> <%=ticket.package_desc_5%> <%=ticket.package_desc_6%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=ticket.package_sac_code%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=ticket.package_quantity%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_bottom"><%=ticket.package_rate%></td>
+                  <td style="text-align: center;" class="table_border_left table_border_right table_border_bottom"> <%=ticket.package_quantity*ticket.package_rate%></td>
                 </tr>
-                <%total+=package_info.package_quantity*package_info.package_rate;%>
+                <%total+=ticket.package_quantity*ticket.package_rate;%>
               <% sno++; %>
+            <%});%>
           </tbody>
       </table>
       </div>

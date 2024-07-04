@@ -68,6 +68,8 @@
                 <tbody>
                   <%let total_bills=0;%>
                   <%let bills_total_cost=0;%>
+                  <% let total_service_charge=0;%>
+
 
                     <% bill.forEach(function(bill) { %>
                         <%customers.forEach(function(customer){%>
@@ -80,6 +82,7 @@
                                 <td>₹<%=bill.bill_total_cost%></td>
                                 <%total_bills++;%>
                                 <%bills_total_cost+=bill.bill_total_cost;%>
+                                <%total_service_charge+=bill.bill_service_charge;%>
                                 <%if(bill.bill_booking_type==2){%>
                                     <form action="/selected_hotel_bill" method="POST">
                                         <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
@@ -102,11 +105,12 @@
                         <%});%>
                     <%});%>
                     <tr>
-                      <td><b>Total No. of Bills</b></td>
-                      <td><b><%= total_bills %></b></td>
-                      <td></td>
-                      <td><b>Total Cost</b></td>
-                      <td><b><%=bills_total_cost%></b></td>
+                      <td><h5><b>Total No. of Bills</b></h5></td>
+                      <td><h5><b><%= total_bills %></b></h5></td>
+                      <td><h5><b>Total Service charge</b></h5></td>
+                      <td><h5><b>₹<%=total_service_charge%></b></h5></td>
+                      <td><h5><b>Total Cost</b></h5></td>
+                      <td><h5><b>₹<%=bills_total_cost%></b></h5></td>
                     </tr>
                 </tbody>
             </table>

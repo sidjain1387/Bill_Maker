@@ -441,7 +441,8 @@ app.post("/bill_package",async(req,res)=>{
     console.log("customer",currentbillerid);
 
     let final_packages= await db.query(`${query2}`,selected_packages);
-    res.render("bill_package.ejs",{package_info:final_packages.rows[0],
+    console.log("final packages",final_packages.rows);
+    res.render("bill_package.ejs",{package_info:final_packages.rows,
             customer:current_customer.rows[0],
             sno:1,
             final_sac_code:sac_code,
@@ -491,25 +492,28 @@ app.post("/delete_selected_hotel_booking",async(req,res)=>{
 })
 
 app.post("/delete_selected_bill",async(req,res)=>{
-    let bill_id=req.body.bill_id;
-    const customer= await customers();
-    let booking_type=await db.query("SELECT bill_booking_type FROM bill_info WHERE bill_id=$1",[parseInt(bill_id)]);
-    if(booking_type.rows[0].bill_booking_type==1){
-        await db.query("UPDATE air_ticket SET air_ticket_bill_id=NULL WHERE air_ticket_bill_id=$1",[parseInt(bill_id)]);
-    }
-    else if(booking_type.rows[0].bill_booking_type==2){
-        await db.query("UPDATE hotel_booking SET hotel_booking_bill_id=NULL WHERE hotel_booking_bill_id=$1",[parseInt(bill_id)]);
-    }
-    else if(booking_type.rows[0].bill_booking_type==3){
-        await db.query("UPDATE package_info SET package_bill_id=NULL WHERE package_bill_id=$1",[parseInt(bill_id)]);
-    }
     try{
+        let bill_id=req.body.bill_id;
+        const customer= await customers();
+        let booking_type=await db.query("SELECT bill_booking_type FROM bill_info WHERE bill_id=$1",[parseInt(bill_id)]);
+        console.log("booking type",booking_type.rows[0].bill_booking_type);
+        if(booking_type.rows[0].bill_booking_type==1){
+            await db.query("UPDATE air_ticket SET air_ticket_bill_id=NULL WHERE air_ticket_bill_id=$1",[parseInt(bill_id)]);
+        }
+        else if(booking_type.rows[0].bill_booking_type==2){
+            await db.query("UPDATE hotel_booking SET hotel_booking_bill_id=NULL WHERE hotel_booking_bill_id=$1",[parseInt(bill_id)]);
+        }
+        else if(booking_type.rows[0].bill_booking_type==3){
+            await db.query("UPDATE package_info SET package_bill_id=NULL WHERE package_bill_id=$1",[parseInt(bill_id)]);
+            console.log("package updated");
+        }
         await db.query("DELETE FROM bill_info WHERE bill_id=$1;",[parseInt(bill_id)]);
         let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
         res.render("delete_bill.ejs",{bill:bill.rows,customers:customer});
     }
-    catch(err){
+        catch(err){
         let delete_hotel=1;
+        const customer= await customers();
         let bill=await db.query("SELECT * FROM bill_info order by bill_id desc");
         res.render("delete_bill.ejs",{bill:bill.rows,customers:customer});
     }    
@@ -660,7 +664,7 @@ app.post("/selected_package",async (req,res)=>{
         console.log("current bill",bills.rows[0]);
 
 
-        res.render("bill_package.ejs",{package_info:final_packages.rows[0],
+        res.render("bill_package.ejs",{package_info:final_packages.rows,
             customer:current_customer.rows[0],
             sno:1,
             final_sac_code:final_packages.rows[0].package_sac_code,
