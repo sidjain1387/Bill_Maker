@@ -39,14 +39,300 @@ app.get("/",(req,res)=>{
     res.render("index.ejs");
 });
 
+//CUSTOMER LIST
+app.get("/customer_list",async(req,res)=>{
+    try{
+        let customers=await db.query("SELECT * FROM customer_info order by customer_id desc");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+
+        res.render("customer/customer_list.ejs",{customer:customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_list");
+        res.redirect("/");
+    }
+})
+//END OF CUSTOMER LIST
+
+
+//CUSTOMER ADD
+app.get("/customer_add",(req,res)=>{
+    try{
+        res.render("customer/customer_add.ejs");
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_add");
+        res.redirect("/customer_list");
+    }
+});
+app.post("/customer_added",async(req,res)=>{
+    try{
+        const name=req.body.customer_name;
+        const address=req.body.customer_address;
+        const gstin=req.body.customer_gstin;
+        const state=req.body.customer_state;
+        const code=req.body.customer_code;
+
+        const result=await db.query("INSERT INTO customer_info(customer_name,customer_address,customer_state,customer_state_code,customer_gstin) values ($1,$2,$3,$4,$5) RETURNING *;",[name,address,state,code,gstin]);
+        res.redirect("/customer_list");
+    }
+    catch (err){
+        let error=true;
+        res.redirect("/customer_list");
+        console.log(err);
+        console.log("Error in post customer_added");
+    }
+})
+//END OF CUSTOMER ADD
+
+
+//CUSTOMER SORT
+app.get("/customer_list_name_a-z",async(req,res)=>{
+    try{
+        let customers=await db.query("SELECT * FROM customer_info order by customer_name asc");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+
+        res.render("customer/customer_list.ejs",{customer:customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_list_names_a-z");
+        res.redirect("/customer_list");
+
+    }
+})
+app.get("/customer_list_name_z-a",async(req,res)=>{
+    try{
+        let customers=await db.query("SELECT * FROM customer_info order by customer_name desc");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+
+        res.render("customer/customer_list.ejs",{customer:customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_list_names_a-z");
+        res.redirect("/customer_list");
+
+    }
+})
+app.get("/customer_list_state_a-z",async(req,res)=>{
+    try{
+        let customers=await db.query("SELECT * FROM customer_info order by customer_state asc");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+
+        res.render("customer/customer_list.ejs",{customer:customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_list_names_a-z");
+        res.redirect("/customer_list");
+
+    }
+})
+app.get("/customer_list_state_z-a",async(req,res)=>{
+    try{
+        let customers=await db.query("SELECT * FROM customer_info order by customer_state desc");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+
+        res.render("customer/customer_list.ejs",{customer:customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get customer_list_names_a-z");
+        res.redirect("/customer_list");
+
+    }
+})
+//END OF CUSTOMER SORT
+
+
+
+//EDIT CUSTOMER
+app.post("/edit_selected_customer",async(req,res)=>{
+    try{
+
+        let selected_to_edit_customer_id=req.body.customer_id;
+        let customer=await db.query("SELECT * FROM customer_info WHERE customer_id=$1",[selected_to_edit_customer_id]);
+        res.render("customer/customer_edit.ejs",{customer:customer.rows[0]});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in post edit_selected_customer");
+        res.redirect("/customer_list");
+
+    }
+})
+app.post("/final_edit_selected_customer",async(req,res)=>{
+    try{
+
+        const name=req.body.customer_name;
+        const address=req.body.customer_address;
+        const gstin=req.body.customer_gstin;
+        const state=req.body.customer_state;
+        const code=req.body.customer_code;
+        let selected_to_edit_customer_id=req.body.customer_id;
+        let result=await db.query("UPDATE customer_info SET customer_name=$1,customer_address=$2,customer_state=$3,customer_state_code=$4,customer_gstin=$5 WHERE customer_id=$6;",[name,address,state,code,gstin,selected_to_edit_customer_id]);
+        res.redirect("/customer_list");
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in post final_edit_selected_customer");
+        res.redirect("/customer_list");
+    }
+})
+//END OF EDIT CUSTOMER
+
+
+//DELETE CUSTOMER
+app.post("/customer_delete",async(req,res)=>{
+    try{
+        let delete_status=true;
+        let selected_customers = [];
+        let original_selected_customers=req.body.customers_to_be_deleted;
+        if(typeof(original_selected_customers)=='string'){
+            let ticket=parseInt(original_selected_customers);
+            selected_customers.push(ticket);
+        }
+        else{
+            for(let j=0;j<original_selected_customers.length;j++){     
+                let ticket=parseInt(original_selected_customers[j]);                    
+                selected_customers.push(ticket);
+            };
+        }
+        selected_customers.forEach(async(customer_id)=>{
+            await db.query("DELETE FROM customer_info WHERE customer_id=$1;",[parseInt(customer_id)]);
+        });
+        res.redirect("/customer_list");
+    }
+    catch(err){
+        res.redirect("/customer_list");
+        console.log(err);
+        console.log("Error in post customer_deleted");
+    }
+})
+//END OF DELETE CUSTOMER
+
+
+///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+
+//AIR TICKET LIST
+app.get("/air_ticket_list",async(req,res)=>{
+    try{
+
+        let air_ticket=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
+        let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
+        let customers_state=await db.query("SELECT customer_state FROM customer_info GROUP BY customer_state;");
+        res.render("air_ticket/air_ticket_list.ejs",{air_ticket:air_ticket.rows,customers:all_customers.rows,customer_state:customers_state.rows});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in get air_Ticket_list");
+        res.redirect("/");
+    }
+
+})
+//END OF AIR TICKET LIST
+
+
+//AIR TICKET ADD
+app.get("/air_ticket_add",async (req,res)=>{
+    const customer= await customers();
+    let previous_tickets=await db.query("SELECT * FROM air_ticket ORDER BY air_ticket_id DESC LIMIT 3;");
+    res.render("air_ticket/air_ticket_add.ejs",{customer:customer,previous_tickets:previous_tickets.rows});
+});
+app.post("/air_ticket_added",async (req,res)=>{
+    try{
+    const flight_number=req.body.flight_number;
+    const flight_date=req.body.flight_date;
+    const flight_time=req.body.flight_time;
+    const flight_pnr=req.body.flight_pnr;
+    const flight_travel_location=req.body.flight_travel_location;
+    const air_ticket_customer_name=req.body.air_ticket_customer_name;
+    const air_ticket_biller_id=req.body.air_ticket_biller_id;
+    const flight_quantity=req.body.flight_quantity;
+    const flight_rate=req.body.flight_rate;
+    const flight_sac_code=req.body.flight_sac_code;
+
+    await db.query("INSERT INTO air_ticket(flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code]);
+    res.redirect("/air_ticket_list");
+    }
+    catch (err){
+        console.log(err);
+        console.log("Error in post air_ticket_add");
+        res.redirect("/air_ticket_list");
+    }
+})
+//END OF AIR TICKET ADD
+
+
+//AIR TICKET EDIT
+app.post("/edit_selected_air_ticket",async(req,res)=>{
+    try{
+
+        let selected_to_edit_air_ticket=req.body.air_ticket_id;
+        let customer=await customers();
+        let air_tickets=await db.query("SELECT * FROM air_ticket WHERE air_ticket_id=$1",[parseInt(selected_to_edit_air_ticket)]);
+        res.render("air_ticket/air_ticket_edit.ejs",{ticket:air_tickets.rows[0],customer:customer});
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in post edit_selected_air_ticket");
+        res.redirect("/air_ticket_list");
+    }
+})
+app.post("/final_edit_air_ticket",async(req,res)=>{
+    try{
+        let selected_to_edit_air_ticket=req.body.air_ticket_id;
+        const flight_number=req.body.flight_number;
+        const flight_date=req.body.flight_date;
+        const flight_time=req.body.flight_time;
+        const flight_pnr=req.body.flight_pnr;
+        const flight_travel_location=req.body.flight_travel_location;
+        const air_ticket_customer_name=req.body.air_ticket_customer_name;
+        const air_ticket_biller_id=req.body.air_ticket_biller_id;
+        const flight_quantity=req.body.flight_quantity;
+        const flight_rate=req.body.flight_rate;
+        const flight_sac_code=req.body.flight_sac_code;
+        
+        let result=await db.query("UPDATE air_ticket SET flight_number=$1,flight_date=$2,flight_time=$3,flight_pnr=$4,flight_travel_location=$5,air_ticket_customer_name=$6,air_ticket_biller_id=$7,flight_quantity=$8,flight_rate=$9,flight_sac_code=$10 WHERE air_ticket_id=$11;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code,selected_to_edit_air_ticket]);
+        res.redirect("/air_ticket_list");
+    }
+    catch(err){
+        console.log(err);
+        console.log("Error in post final_edit_air_ticket");
+        res.redirect("/air_ticket_list");
+    }
+
+})  
+//END OF AIR TICKET EDIT
+
+
+//DELETE AIR TICKET
+app.post("/air_ticket_delete",async(req,res)=>{
+    try{
+        let air_ticket_id=req.body.air_ticket_id;
+        await db.query("DELETE FROM air_ticket WHERE air_ticket_id=$1;",[parseInt(air_ticket_id)]);
+        res.redirect("/air_ticket_list");
+    }
+    catch(err){
+        res.redirect("/air_ticket_list");
+        console.log(err);
+        console.log("Error in post delete_selected_air_ticket");
+    }
+})
+//END OF DELETE AIR TICKET
+
+
+
 app.get("/customer",(req,res)=>{
     res.render("customer.ejs");
 });
-app.get("/air_ticket",async (req,res)=>{
-    const customer= await customers();
-    let previous_tickets=await db.query("SELECT * FROM air_ticket ORDER BY air_ticket_id DESC LIMIT 3;");
-    res.render("air_ticket.ejs",{customer:customer,previous_tickets:previous_tickets.rows});
-}); 
+ 
 app.get("/hotel_booking", async(req,res)=>{
     const customer= await customers();
     let previous_bookings=await db.query("SELECT * FROM hotel_booking ORDER BY hotel_booking_id DESC LIMIT 3;");
@@ -73,12 +359,6 @@ app.get("/selected_bill_list",async(req,res)=>{
 
 
 
-
-app.get("/customer_list",async (req,res)=>{
-    let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
-    res.render("customer_list.ejs",{customer:customers.rows});
-})
-
 app.get("/delete_customer",async(req,res)=>{
     let customers=await db.query("SELECT * FROM customer_info order by customer_id desc");
     let delete_cus=0;
@@ -93,13 +373,7 @@ app.get("/delete_air_ticket",async(req,res)=>{
     res.render("delete_air_ticket.ejs",{air_ticket:air_tickets.rows,delete_air:delete_air,customers:all_customers.rows});
 })
 
-app.get("/air_ticket_list",async(req,res)=>{
-    let air_ticket=await db.query("SELECT * FROM air_ticket order by air_ticket_id desc;");
-    let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
 
-    res.render("air_ticket_list.ejs",{air_ticket:air_ticket.rows,customers:all_customers.rows});
-
-})
 
 app.get("/hotel_booking_list",async(req,res)=>{
     let hotel_booking=await db.query("SELECT * FROM hotel_booking order by hotel_booking_id desc;");
@@ -135,58 +409,8 @@ let currentbillerid=0;
 let currentbillername="";
 let choice=0;
 
-app.post("/addcustomer",async (req,res)=>{
-    const name=req.body.customer_name;
-    const address=req.body.customer_address;
-    const gstin=req.body.customer_gstin;
-    const state=req.body.customer_state;
-    const code=req.body.customer_code;
-
-    try{
-        const result=await db.query("INSERT INTO customer_info(customer_name,customer_address,customer_state,customer_state_code,customer_gstin) values ($1,$2,$3,$4,$5) RETURNING *;",[name,address,state,code,gstin]);
-        console.log(result.rows[0]);
-        console.log(result.rows[0].customer_name);
-        res.render("customer.ejs",{name:result.rows[0].customer_name,address:result.rows[0].customer_address,state:result.rows[0].customer_state,code:result.rows[0].customer_state_code,gstin:result.rows[0].customer_gstin});
-    }
-    catch (err){
-        console.log(err);
-    }
-})
-app.post("/addticket",async (req,res)=>{
-    const flight_number=req.body.flight_number;
-    const flight_date=req.body.flight_date;
-    const flight_time=req.body.flight_time;
-    const flight_pnr=req.body.flight_pnr;
-    const flight_travel_location=req.body.flight_travel_location;
-    const air_ticket_customer_name=req.body.air_ticket_customer_name;
-    const air_ticket_biller_id=req.body.air_ticket_biller_id;
-    const flight_quantity=req.body.flight_quantity;
-    const flight_rate=req.body.flight_rate;
-    const flight_sac_code=req.body.flight_sac_code;
-    const customer= await customers();
 
 
-    try{
-        const result=await db.query("INSERT INTO air_ticket(flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code]);
-        let previous_tickets=await db.query("SELECT * FROM air_ticket ORDER BY air_ticket_id DESC LIMIT 3;");
-
-        res.render("air_ticket.ejs",
-            {number:result.rows[0].flight_number ,
-                 date:result.rows[0].flight_date ,
-                 time:result.rows[0].flight_time ,
-                 pnr:result.rows[0].flight_pnr,
-                 location:result.rows[0].flight_travel_location,
-                 name:result.rows[0].air_ticket_customer_name,
-                 customer:customer,
-                quantity:result.rows[0].flight_quantity,
-                rate:result.rows[0].flight_rate,
-                sac_code:result.rows[0].flight_sac_code,
-                previous_tickets:previous_tickets.rows});
-    }
-    catch (err){
-        console.log(err);
-    }
-})
 app.post("/addhotelbooking",async (req,res)=>{
     const hotel_booking_customer_name=req.body.hotel_booking_customer_name;
     const hotel_name=req.body.hotel_name;
@@ -466,17 +690,7 @@ app.post("/delete_selected_biller",async(req,res)=>{
 
 })
 
-app.post("/delete_selected_air_ticket",async(req,res)=>{
-    let air_ticket_id=req.body.air_ticket_id;
-    try{
-        await db.query("DELETE FROM air_ticket WHERE air_ticket_id=$1;",[parseInt(air_ticket_id)]);
-        res.redirect("/delete_air_ticket");
-    }
-    catch(err){
-        let delete_air=1;
-        res.redirect("/delete_air_ticket");
-    }
-})
+
 
 
 app.post("/delete_selected_hotel_booking",async(req,res)=>{
@@ -689,34 +903,9 @@ app.get("/edit_air_ticket",async(req,res)=>{
 })
 
 let selected_to_edit_air_ticket=0;
-app.post("/edit_selected_air_ticket",async(req,res)=>{
-    selected_to_edit_air_ticket=req.body.air_ticket_id;
-    let customer=await customers();
-    let air_tickets=await db.query("SELECT * FROM air_ticket WHERE air_ticket_id=$1",[parseInt(selected_to_edit_air_ticket)]);
-    res.render("edit_2_air_ticket.ejs",{ticket:air_tickets.rows[0],customer:customer});
-})
 
-app.post("/final_edit_air_ticket",async(req,res)=>{
-    const flight_number=req.body.flight_number;
-    const flight_date=req.body.flight_date;
-    const flight_time=req.body.flight_time;
-    const flight_pnr=req.body.flight_pnr;
-    const flight_travel_location=req.body.flight_travel_location;
-    const air_ticket_customer_name=req.body.air_ticket_customer_name;
-    const air_ticket_biller_id=req.body.air_ticket_biller_id;
-    const flight_quantity=req.body.flight_quantity;
-    const flight_rate=req.body.flight_rate;
-    const flight_sac_code=req.body.flight_sac_code;
 
-    let result=await db.query("UPDATE air_ticket SET flight_number=$1,flight_date=$2,flight_time=$3,flight_pnr=$4,flight_travel_location=$5,air_ticket_customer_name=$6,air_ticket_biller_id=$7,flight_quantity=$8,flight_rate=$9,flight_sac_code=$10 WHERE air_ticket_id=$11;",[flight_number,flight_date,flight_time,flight_pnr,flight_travel_location,air_ticket_customer_name,air_ticket_biller_id,flight_quantity,flight_rate,flight_sac_code,selected_to_edit_air_ticket]);
-    res.redirect("/air_ticket_list");
 
-})
-
-app.get("/edit_customer",async(req,res)=>{
-    let customers=await db.query("SELECT * FROM customer_info order by customer_id desc;");
-    res.render("edit_1_customer.ejs",{customer:customers.rows});
-})
 
 let selected_to_edit_customer_id=0;
 
@@ -726,15 +915,7 @@ app.post("/edit_selected_customer",async(req,res)=>{
     res.render("edit_2_customer.ejs",{customer:customer.rows[0]});
 })
 
-app.post("/final_edit_selected_customer",async(req,res)=>{
-    const name=req.body.customer_name;
-    const address=req.body.customer_address;
-    const gstin=req.body.customer_gstin;
-    const state=req.body.customer_state;
-    const code=req.body.customer_code;
-    let result=await db.query("UPDATE customer_info SET customer_name=$1,customer_address=$2,customer_state=$3,customer_state_code=$4,customer_gstin=$5 WHERE customer_id=$6;",[name,address,state,code,gstin,selected_to_edit_customer_id]);
-    res.redirect("/customer_list");
-})
+
 
 
 app.get("/edit_hotel_booking",async(req,res)=>{

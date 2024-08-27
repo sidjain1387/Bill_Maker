@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Ticket List</title>
+ 
+
+</head>
+<body>
+  <%-include("../partials/header.ejs")%>
+  <div class="mx-auto" style="width: 1400px;">
+      <br>
+      <center><h1 style="font-family: 'Playfair Display', serif;
+        font-optical-sizing: auto;
+        font-weight: 700;
+        font-style: bold;">AIR TICKET</h1></center>
+
+        <br>
+        <div class="row">
+
+            <div class="col-1">
+              <a href="/air_ticket_add">
+                <button class="btn btn-outline-primary fw-bolder">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
+                  </svg> ADD</button>
+                </a>
+            </div>
+            <div class="col-1">
+              <button class="btn dropdown-toggle fw-bolder btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                  <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                </svg> SORT</button>
+                <ul class="dropdown-menu bg-info-subtle">
+                  <li><a class="dropdown-item" href="/customer_list_name_a-z">NAMES A-Z </a></li>
+                  <li><a class="dropdown-item" href="/customer_list_name_z-a">NAMES Z-A</a></li>
+                  <li><a class="dropdown-item" href="/customer_list_state_a-z">STATE A-Z</a></li>
+                  <li><a class="dropdown-item" href="/customer_list_state_z-a">STATE Z-A</a></li>
+                </ul>
+              </div>
+              <div class="col-1" style="margin-left: 20px;">
+                <button class="btn dropdown-toggle fw-bolder btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z"/>
+                  </svg> FILTER</button>
+                <form class="dropdown-menu p-4" data-bs-theme="dark">
+                  <select class="form-select" aria-label="Default select example">
+                    <option selected>SELECT STATE</option>
+                    <% customer_state.forEach((customer)=>{%>
+                      <option value="<%=customer.customer_state%>"><%=customer.customer_state%></option>
+                    <% })%>
+      
+                  </select>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 20px;">SUBMIT</button>
+                </form>
+              </div>  
+            </div>
+            <table class="table table-striped table-primary table-bordered mx-auto" style="width: 1400px;">
+                <thead>
+                    <tr class="table-dark">
+                        <th scope="col">Id</th>
+                        <th scope="col" class="text-center">Customer Name</th>
+                        <th scope="col" class="text-center">Flight Number</th>
+                        <th scope="col" class="text-center">Flight Date</th>
+                        <th scope="col" class="text-center">Flight Time</th>
+                        <th scope="col" class="text-center">Flight PNR</th>
+                        <th scope="col" class="text-center">Flight Travel Location</th>
+                        <th scope="col" class="text-center">Flight Quantity</th>
+                        <th scope="col" class="text-center">Flight Rate</th>
+                        <th scope="col" class="text-center">Flight SAC Code</th>
+                        <th scope="col" class="text-center">Biller Name</th>
+                        <th scope="col" class="text-center">Total Cost</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%let total_airtickets=0;%>
+                    <%let total_cost=0;%>
+                    <% air_ticket.forEach(function(ticket) { %>
+                        <%customers.forEach(function(customer){%>
+                            <%if(customer.customer_id==ticket.air_ticket_biller_id){%>
+                                <tr>
+                                    
+                                    <td class="p-1"><p class="text-center" style="font-size: 15px; margin-bottom: 2px;"><%=ticket.air_ticket_id%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.air_ticket_customer_name%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_number%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_date%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_time%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_pnr%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_travel_location%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_quantity%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_rate%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_sac_code%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=customer.customer_name%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;">₹<%=ticket.flight_quantity*ticket.flight_rate%></p></td>
+                                    <%total_airtickets+=1;%>
+                                    <%total_cost+=(ticket.flight_quantity*ticket.flight_rate);%>
+                                    <td>
+                                        <form action="/edit_selected_air_ticket" method="post">
+                                          <input type="hidden" name="air_ticket_id" value="<%= ticket.air_ticket_id %>">
+                                          <button type="submit" class="btn btn-outline-success btn-sm fw-bold">EDIT</button>
+                                        </form>
+                                      </td>
+                                      <td>
+                                        <form action="/air_ticket_delete" method="post" onsubmit="return confirmDeletion(event)">
+                                          <input type="hidden" name="air_ticket_id" value="<%= ticket.air_ticket_id %>">
+                                          <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">DELETE</button>
+                                        </form>
+                                      </td>
+                                </tr>
+                            <%}%>
+                        <% }); %>
+                    <%});%>
+                    <hr>
+                    <tr class="table-dark">
+                        <td></td>
+                        <td><h5><b>Total No. of PNR</b></h5></td>
+                        <td><h5><b><%=total_airtickets%></b></h5></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h5><b>Total Cost</b></h5></td>
+                        <td><h5><b>₹<%=total_cost%></b></h5></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        <br>
+        <br>
+      </div>
+</body>
+<script>
+  function confirmDeletion(event) {
+    const isConfirmed = confirm("Are you sure you want to delete this customer?");
+    
+    if (!isConfirmed) {
+      // Prevent form submission
+      event.preventDefault();
+      // Redirect to /customer_list if deletion is canceled
+      window.location.href = "/air_ticket_list";
+      return false;
+    }
+
+    // Allow form submission if deletion is confirmed
+    return true;
+  }
+</script>
+</html>

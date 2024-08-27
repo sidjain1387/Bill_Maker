@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Add Ticket</title>
  
   </head>
   <body>
-    <%-include("partials/header.ejs")%>
+    <%-include("../partials/header.ejs")%>
 
     <h1 style="text-align: center">Adding Air Ticket</h1>
     <div class="container-sm col-6">
-      <form class="row g-3" method="post" action="/addticket">
+      <form class="row g-3" method="post" action="/air_ticket_added">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Customer Name</label>
           <input type="text" class="form-control border border-black" id="inputEmail4" name="air_ticket_customer_name" list="NameOptions">

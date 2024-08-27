@@ -7,11 +7,12 @@
  
   </head>
   <body>
-    <%-include("partials/header.ejs")%>
+    <%-include("../partials/header.ejs")%>
 
     <h1 style="text-align: center">EDIT Air Ticket</h1>
     <div class="container-sm col-6">
       <form class="row g-3" method="post" action="/final_edit_air_ticket">
+        <input type="hidden" name="air_ticket_id" value="<%=ticket.air_ticket_id%>">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Customer Name</label>
           <input type="text" class="form-control border border-black" id="inputEmail4" name="air_ticket_customer_name" value="<%=ticket.air_ticket_customer_name%>">
