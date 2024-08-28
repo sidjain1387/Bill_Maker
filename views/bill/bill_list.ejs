@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill List</title>
+
+</head>
+<body>
+    <%-include("../partials/header.ejs")%>
+    <br>
+    <center><h1 style="font-family: 'Playfair Display', serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: bold;">BILL</h1></center>
+    <div class="mx-auto" style="width: 1400px;">
+      <!-- <%if(locals.bill_status==1){%>
+        <h3>Bill List is declared</h3>
+      <%}else if(locals.bill_status==0){%>
+          <h3>Bill cannot be shown</h3>
+      <%}else{%>
+        <h3>Bill List is empty</h3>
+      <%}%> -->
+      <div class="row" style="margin-left:90px;">
+
+        <div class="col-1">
+          <a href="/preprebill">
+            <button class="btn btn-outline-primary fw-bolder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
+              </svg> ADD</button>
+            </a>
+        </div>
+        <div class="col-1">
+          <button class="btn dropdown-toggle fw-bolder btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+              <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+            </svg> SORT</button>
+            <ul class="dropdown-menu bg-info-subtle">
+              <li><a class="dropdown-item" href="/customer_list_name_a-z">NAMES A-Z </a></li>
+              <li><a class="dropdown-item" href="/customer_list_name_z-a">NAMES Z-A</a></li>
+              <li><a class="dropdown-item" href="/customer_list_state_a-z">STATE A-Z</a></li>
+              <li><a class="dropdown-item" href="/customer_list_state_z-a">STATE Z-A</a></li>
+            </ul>
+          </div>
+          <div class="col-1" style="margin-left: 20px;">
+            <button class="btn dropdown-toggle fw-bolder btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="filter_button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z"/>
+              </svg> FILTER</button>
+            <form class="dropdown-menu p-4 col-6" data-bs-theme="dark" method="post" action="/bill_filter">
+              <div class="row">
+
+                <div class="col-4">
+                  <label for="select_mcq" class="form-label">Customer Name</label>
+                  <select class="form-select border border-success" aria-label="Default select example" name="select_mcq" size="5">
+                    <% customers.forEach(function(customer){%>
+                      <option value="<%=customer.customer_id%>"><%=customer.customer_name%></option>
+                      <%})%>
+                    </select>
+                  </div>
+                  <div class="col-4">
+                    <label for="inputEmail4" class="form-label">Date From</label>
+                    <input type="date" class="form-control border border-success" id="inputEmail4" name="date_from">
+                  </div>
+                  <div class="col-4">
+                    <label for="inputEmail4" class="form-label">Date To</label>
+                    <input type="date" class="form-control border border-success" id="inputEmail4" name="date_to">
+                  </div>
+                  
+                </div>
+  
+              <button type="submit" class="btn btn-primary" style="margin-top: 20px;">SUBMIT</button>
+            </form>
+          </div>  
+        </div>
+        
+            <hr>
+            <%if(locals.bill){%>
+              
+            <table class="table table-striped table-primary table-bordered mx-auto" style="width: 1322px;">
+                <thead>
+                    <tr class="table-dark">
+                        <th scope="col">Bill No.</th>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Bill Date</th>
+                        <th scope="col">Bill Service Charge</th>
+                        <th scope="col">Bill Total</th>
+                        <th scope="col">Bill PDF</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <%let total_bills=0;%>
+                  <%let bills_total_cost=0;%>
+                  <% let total_service_charge=0;%>
+
+
+                    <% bill.forEach(function(bill) { %>
+                        <%customers.forEach(function(customer){%>
+                        <tr>
+                            <%if(bill.bill_customer_id==customer.customer_id){%>
+                                <td><%=bill.bill_id%></td>
+                                <td><%=customer.customer_name%></td>
+                                <td><%=bill.bill_date.toLocaleDateString()%></td>
+                                <td>₹<%=bill.bill_service_charge*bill.bill_service_charge_quantity%></td>
+                                <td>₹<%=bill.bill_total_cost%></td>
+                                <%total_bills++;%>
+                                <%bills_total_cost+=bill.bill_total_cost;%>
+                                <%total_service_charge+=bill.bill_service_charge;%>
+                                <%if(bill.bill_booking_type==2){%>
+                                    <form action="/selected_hotel_bill" method="POST">
+                                        <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                        <td><button type="submit" id="original_button" class="btn btn-outline-success btn-sm fw-bold" >VIEW BILL</button></td>
+                                    </form>
+                                <%}else if(bill.bill_booking_type==1){%>
+
+                                    <form action="/selected_air_bill" method="POST">
+                                        <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                        <td><button type="submit" id="original_button" class="btn btn-outline-success btn-sm fw-bold" >VIEW BILL</button></td>
+                                    </form>
+                                <%}else{%>
+                                    <form action="/selected_package" method="POST">
+                                      <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                      <td><button type="submit" id="original_button" class="btn btn-outline-success btn-sm fw-bold">VIEW BILL</button></td>
+                                    </form>
+                                <%}%>
+                                <td>
+                                  <form action="/edit_selected_bill" method="post">
+                                    <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm fw-bold">EDIT</button>
+                                  </form>
+                                </td>
+                                <td>
+                                  <form action="/bill_delete" method="post" onsubmit="return confirmDeletion(event)">
+                                    <input type="hidden" name="bill_id" value="<%= bill.bill_id %>">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">DELETE</button>
+                                  </form>
+                                </td>
+                            <%};%>
+                        </tr>
+                        <%});%>
+                    <%});%>
+                    <tr class="table-dark">
+                      <td><h5><b>Total No. of Bills</b></h5></td>
+                      <td><h5><b><%= total_bills %></b></h5></td>
+                      <td><h5><b>Total Service charge</b></h5></td>
+                      <td><h5><b>₹<%=total_service_charge%></b></h5></td>
+                      <td><h5><b>Total Cost</b></h5></td>
+                      <td><h5><b>₹<%=bills_total_cost%></b></h5></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <%}%>
+    </div>
+    
+</body>
+<script>
+  function confirmDeletion(event) {
+    const isConfirmed = confirm("Are you sure you want to delete this customer?");
+    
+    if (!isConfirmed) {
+      // Prevent form submission
+      event.preventDefault();
+      // Redirect to /customer_list if deletion is canceled
+      window.location.href = "/bill_list";
+      return false;
+    }
+
+    // Allow form submission if deletion is confirmed
+    return true;
+  }
+</script>
+</html>

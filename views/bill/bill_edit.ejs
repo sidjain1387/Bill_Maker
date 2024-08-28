@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrePreBill</title>
+ 
+
+</head>
+<body>
+  <%-include("../partials/header.ejs")%>
+
+  <div class="container">
+    <br>
+    <center><h1 style="font-family: 'Playfair Display', serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: bold;">Edit Bill</h1></center>
+      <hr>
+    
+    <form class="row g-3" method="post" action="/final_edit_selected_bill">
+      <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill No.</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_id" value="<%=bill.bill_id%>">
+        </div>
+        <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill Date</label>
+          <input type="date" class="form-control border border-success" id="inputEmail4" name="bill_date" value="<%=bill.bill_date.toISOString().split('T')[0]%>">
+        </div>
+        <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill Service Charge</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_service_charge" value="<%=bill.bill_service_charge%>">
+        </div>
+        <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill Service Charge Quantity</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_service_charge_quantity" value="<%=bill.bill_service_charge_quantity%>">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">SUBMIT</button>
+        </div>
+      </form>
+      
+      </div>
+</body>
+
+</html>

@@ -3,15 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Edit Package</title>
  
   </head>
   <body>
-    <%-include("partials/header.ejs")%>
+    <%-include("../partials/header.ejs")%>
 
-    <h1 style="text-align: center">Adding Air Ticket</h1>
+    <center><h1 style="font-family: 'Playfair Display', serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: bold;">Edit Package</h1></center>
     <div class="container-sm col-6">
       <form class="row g-3" method="post" action="/final_edit_selected_package">
+        <input type="hidden" name="package_id" value="<%=package_info.package_id%>">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Package Desciption 1</label>
           <input type="text" class="form-control border border-black" id="inputEmail4" name="package_desc_1" value="<%=package_info.package_desc_1%>">

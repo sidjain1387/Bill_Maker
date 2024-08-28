@@ -7,10 +7,13 @@
  
   </head>
   <body>
-    <%-include("partials/header.ejs")%>
-    <h1 style="text-align: center">Adding Hotel Booking</h1>
+    <%-include("../partials/header.ejs")%>
+    <center><h1 style="font-family: 'Playfair Display', serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: bold;">Add Hotel Booking</h1></center>
     <div class="container-sm col-6">
-      <form class="row g-3" method="post" action="/addhotelbooking">
+      <form class="row g-3" method="post" action="/hotel_booking_added">
         <div class="col-md-6">
           <label for="inputEmail4" class="form-label">Customer Name</label>
           <input type="text" class="form-control border border-success" id="inputEmail4" name="hotel_booking_customer_name" list="NameOptions">

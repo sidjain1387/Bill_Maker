@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrePreBill</title>
+ 
+
+</head>
+<body>
+  <%-include("../partials/header.ejs")%>
+
+  <div class="container">
+    <br>
+    <center><h1 style="font-family: 'Playfair Display', serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: bold;">Add Bill</h1></center>
+      <hr>
+    
+    <form class="row g-3" method="post" action="/prebill">
+      <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill No.</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="bill_id">
+        </div>
+        <div class="col-md-3">
+          <label for="select_mcq" class="form-label">Biller Name</label>
+          <select class="form-select border border-success" aria-label="Default select example" name="select_mcq" id="select_mcq">
+            <% customer.forEach(function(customer){%>
+              <option value="<%=customer.customer_id%>"><%=customer.customer_name%></option>
+              <%})%>
+            </select>
+          </div>
+        <div class="col-md-3">
+          <label for="inputEmail4" class="form-label">Bill Date</label>
+          <input type="date" class="form-control border border-success" id="inputEmail4" name="bill_date">
+        </div>
+        <div class="col-md-5">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="choice" id="inlineRadio1" value="1" style="outline: 2px solid black;">
+            <label class="form-check-label" for="inlineRadio1">1-Air Ticket</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="choice" id="inlineRadio2" value="2" style="outline: 2px solid black;">
+            <label class="form-check-label" for="inlineRadio2">2-Hotel Booking</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="choice" id="inlineRadio3" value="3" style="outline: 2px solid black;">
+            <label class="form-check-label" for="inlineRadio3">3-Packages</label>
+          </div>
+          <!-- <label for="inputEmail4" class="form-label">Enter <b>1</b> -Air ticket Bill & <b>2</b> -Hotel Booking Bill & <b>3</b>-Packages</label>
+          <input type="text" class="form-control border border-success" id="inputEmail4" name="choice"> -->
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">ADD</button>
+        </div>
+      </form>
+      
+      <br>
+      <br>
+      
+        <br>
+      </div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  const selectElement = document.getElementById('select_mcq');
+
+  // Initially display one option
+  selectElement.size = 1;
+
+  // Expand to show 5 options when clicked
+  selectElement.addEventListener('click', function () {
+    this.size = 5;
+  });
+
+  // Collapse to show only the selected option after selection
+  selectElement.addEventListener('change', function () {
+    this.size = 1;
+  });
+
+  // Collapse when focus is lost (optional, for better UX)
+  selectElement.addEventListener('blur', function () {
+    this.size = 1;
+  });
+});
+</script>
+</html>

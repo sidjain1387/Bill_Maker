@@ -16,7 +16,6 @@
         font-weight: 700;
         font-style: bold;">AIR TICKET</h1></center>
 
-        <br>
         <div class="row">
 
             <div class="col-1">
@@ -34,10 +33,8 @@
                   <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
                 </svg> SORT</button>
                 <ul class="dropdown-menu bg-info-subtle">
-                  <li><a class="dropdown-item" href="/customer_list_name_a-z">NAMES A-Z </a></li>
-                  <li><a class="dropdown-item" href="/customer_list_name_z-a">NAMES Z-A</a></li>
-                  <li><a class="dropdown-item" href="/customer_list_state_a-z">STATE A-Z</a></li>
-                  <li><a class="dropdown-item" href="/customer_list_state_z-a">STATE Z-A</a></li>
+                  <li><a class="dropdown-item" href="/air_ticket_list_customer_name_a-z">CUSTOMER NAMES A-Z </a></li>
+                  <li><a class="dropdown-item" href="/air_ticket_list_customer_name_z-a">CUSTOMER NAMES Z-A</a></li>
                 </ul>
               </div>
               <div class="col-1" style="margin-left: 20px;">
@@ -45,11 +42,11 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" style="padding-bottom: 3px;" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
                     <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z"/>
                   </svg> FILTER</button>
-                <form class="dropdown-menu p-4" data-bs-theme="dark">
-                  <select class="form-select" aria-label="Default select example">
-                    <option selected>SELECT STATE</option>
-                    <% customer_state.forEach((customer)=>{%>
-                      <option value="<%=customer.customer_state%>"><%=customer.customer_state%></option>
+                <form class="dropdown-menu p-4" data-bs-theme="dark" method="post" action="/air_ticket_filter">
+                  <select class="form-select" aria-label="Default select example" name="selected_biller" size="5">
+                    <option selected>Select Biller</option>
+                    <% customers.forEach((customer)=>{%>
+                      <option value="<%=customer.customer_id%>"><%=customer.customer_name%></option>
                     <% })%>
       
                   </select>
@@ -84,7 +81,7 @@
                             <%if(customer.customer_id==ticket.air_ticket_biller_id){%>
                                 <tr>
                                     
-                                    <td class="p-1"><p class="text-center" style="font-size: 15px; margin-bottom: 2px;"><%=ticket.air_ticket_id%></p></td>
+                                    <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.air_ticket_id%></p></td>
                                     <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.air_ticket_customer_name%></p></td>
                                     <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_number%></p></td>
                                     <td class="p-1"><p style="font-size: 15px; margin-bottom: 2px;"><%=ticket.flight_date%></p></td>
