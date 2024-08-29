@@ -10,21 +10,23 @@
 <body>
     <%-include("../partials/header.ejs")%>
     <div class="container">
-
-        <h1>Bill Number: <%=locals.bill_id%></h1>
-        <h1>Biller Name: <%=locals.customer_name%></h1>
+        <br>
+        <h4>Bill Number: <%=locals.bill_id%></h4>
+        <h4>Biller Name: <%=locals.customer_name%></h4>
+        <hr>
     </div>
-    <br>
-    <br>
     <div class="container">
         <form class="tab-view tab-view-height-auto" action="/bill_hotel" method="post">
             
             <br>
+            <center><h1 style="font-family: 'Playfair Display', serif;
+                font-optical-sizing: auto;
+                font-weight: 700;
+                font-style: bold;">Hotel Bookings</h1></center>
             <br>
-            <h3>Hotel Bookings</h3>
-            <table class="table">
+            <table class="table table-striped table-primary table-bordered mx-auto" style="width: 1322px;">
                 <thead>
-                    <tr>
+                    <tr class="table-dark">
                         <th scope="col">Checkbox</th>
                         <th scope="col">Customer Name</th>
                         <th scope="col">Hotel Name</th>
@@ -41,7 +43,7 @@
                     
                     <% hotel_booking.forEach(function(booking) { %>
                         <tr>
-                            <th scope="row"><input type="checkbox" id="<%=booking.hotel_booking_id%>" name="selected_bookings" value="<%=booking.hotel_booking_id%>"/>
+                            <th scope="row"><input type="checkbox" id="<%=booking.hotel_booking_id%>" name="selected_bookings" value="<%=booking.hotel_booking_id%>" />
                             </th>
                             <td><%=booking.hotel_booking_customer_name%></td>
                             <td><%=booking.hotel_name%></td>
@@ -56,21 +58,26 @@
                     <%});%>
                 </tbody>
             </table>
+            <input type="hidden" value="<%=locals.bill_id%>" name="bill_id">
+            <input type="hidden" value="<%=locals.biller_id%>" name="biller_id">
             <br>
-            <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Service Charge(amount)</label>
-                <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_rate">
-            </div>
-            <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">Service Charge Quantity</label>
-                <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_quantity">
-            </div>
-            <div class="col-md-4">
-                <label for="inputEmail4" class="form-label">SAC CODE</label>
-                <input type="number" class="form-control border border-success" id="inputEmail4" value="00440063" name="sac_code_original">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <label for="inputEmail4" class="form-label">Service Charge(amount)</label>
+                    <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_rate">
+                </div>
+                <div class="col-md-2">
+                    <label for="inputEmail4" class="form-label">Service Charge Quantity</label>
+                    <input type="text" class="form-control border border-success" id="inputEmail4" name="service_charge_quantity">
+                </div>
+                <div class="col-md-2">
+                    <label for="inputEmail4" class="form-label">SAC CODE</label>
+                    <input type="number" class="form-control border border-success" id="inputEmail4" value="00440063" name="sac_code_original">
+                </div>
             </div>
             <br>
-            <input type="submit" name="add" value="Submit" id="tab">
+            <input type="submit" name="add" value="Submit" id="tab" class="btn btn-sm btn-primary">
         </form>
         <br>
         <br>

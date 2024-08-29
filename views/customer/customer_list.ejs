@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer List</title>
+
  
 
 </head>
@@ -127,6 +128,28 @@
     // Allow form submission if deletion is confirmed
     return true;
   }
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const errorMessage = "<%= locals.errorMessage %>" || null;
+    if (errorMessage) {
+        Swal.fire({
+            title: 'Error!',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+  });
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const successMessage = "<%= locals.successMessage %>" || null;
+    if (successMessage) {
+        Swal.fire({
+            title: 'Success!',
+            text: successMessage,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+  });
 </script>
 
 </html>

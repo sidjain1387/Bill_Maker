@@ -8,11 +8,13 @@
   </head>
   <body>
     <%-include("../partials/header.ejs")%>
+    <br>
 
     <center><h1 style="font-family: 'Playfair Display', serif;
       font-optical-sizing: auto;
       font-weight: 700;
       font-style: bold;">Edit Customer</h1></center>
+      <hr>
     <div class="container-sm col-6">
       <form class="row g-3" method="post" action="/final_edit_selected_customer">
         <input type="hidden" name="customer_id" value="<%=customer.customer_id%>">

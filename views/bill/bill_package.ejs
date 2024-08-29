@@ -185,7 +185,7 @@
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight,undefined,'SLOW');
-            doc.save("<%=customer.customer_name%> Bill no:<%=billno%>.pdf");
+            doc.save("Bill no-<%=billno%> Customer-<%=customer.customer_name%> .pdf");
           });
         });
         let total=document.getElementById("total_value").innerText;

@@ -8,11 +8,12 @@
   </head>
   <body>
     <%-include("../partials/header.ejs")%>
-
+    <br>
     <center><h1 style="font-family: 'Playfair Display', serif;
       font-optical-sizing: auto;
       font-weight: 700;
       font-style: bold;">Edit Air Ticket</h1></center>
+      <hr>
       <div class="container-sm col-6">
       <form class="row g-3" method="post" action="/final_edit_air_ticket">
         <input type="hidden" name="air_ticket_id" value="<%=ticket.air_ticket_id%>">
@@ -61,39 +62,8 @@
         </div>
       </form>
       <br>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Biller Id</th>
-            <th scope="col">Biller Name</th>
-          </tr>
-        </thead>
-        <tbody>
-            <% customer.forEach((customer)=>{%>
-                <tr>
-                    <th scope="row"><%=customer.customer_id%></th>
-                    <td><%=customer.customer_name%></td>
-                </tr>
-            <%});%>
-        </tbody>
-      </table>
-      <br>
-      <% if (locals.number){ %>
-      <h1>Air Ticket Added Successfully</h1>
-      <h3>The previous records inserted are</h3>
-      <ul>
-        <li><h5>Customer Name: <%=locals.name%></h5></li>
-        <li><h5>Flight Number: <%=locals.number%></h5></li>
-        <li><h5>Flight Date: <%=locals.date%></h5></li>
-        <li><h5>Flight Time: <%=locals.time%></h5></li>
-        <li><h5>Flight PNR: <%=locals.pnr%></h5></li>
-        <li><h5>Flight From/To Location: <%=locals.location%></h5></li>
-        <li><h5>Flight Quantity: <%=locals.quantity%></h5></li>
-        <li><h5>Flight Rate: <%=locals.rate%></h5></li>
-        <li><h5>Flight SAC Code: <%=locals.sac_code%></h5></li>
-      </ul>
       
-      <% }%>
+      <br>
     </div>
 
   </body>

@@ -1,2 +1,33 @@
 <%-include("partials/header.ejs")%>
 <h1 style="text-align: center; margin-top: 50px; font-weight: bolder; font-size:100px;">Home</h1>
+
+<br><br>
+<br>
+<br>
+<hr>
+<center><h3>Contact Siddhant Jain to solve any Error/Problem</h3>
+<h4>+91-9540251387 (available 24x7)</h4></center>
+<script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+    const errorMessage = "<%= locals.errorMessage %>" || null;
+    if (errorMessage) {
+        Swal.fire({
+            title: 'Error!',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+  });
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const successMessage = "<%= locals.successMessage %>" || null;
+    if (successMessage) {
+        Swal.fire({
+            title: 'Success!',
+            text: successMessage,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+  });
+</script>
