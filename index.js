@@ -1177,9 +1177,10 @@ app.post("/final_edit_selected_bill",async(req,res)=>{
     try{
         const bill_id=req.body.bill_id;
         const bill_date=req.body.bill_date;
-        const bill_service_charge=req.body.bill_service_charge;
+        const bill_service_charge_rate=req.body.bill_service_charge_rate;
         const bill_service_charge_quantity=req.body.bill_service_charge_quantity;
-        await db.query("UPDATE bill_info SET bill_date=$1,bill_service_charge=$2,bill_service_charge_quantity=$3 WHERE bill_id=$4;",[bill_date,bill_service_charge,bill_service_charge_quantity,bill_id]);
+        const bill_sac_code=req.body.bill_sac_code;
+        await db.query("UPDATE bill_info SET bill_date=$1,bill_service_charge=$2,bill_service_charge_quantity=$3,bill_sac_code=$4 WHERE bill_id=$5;",[bill_date,bill_service_charge_rate,bill_service_charge_quantity,bill_sac_code,bill_id]);
         res.redirect(`/bill_list?successMessage=${("The Bill has been edited successfully.")}`);
     }
     catch(err){
