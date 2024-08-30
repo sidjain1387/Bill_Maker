@@ -1,27 +1,43 @@
 @echo off
-echo Starting backup at %DATE% %TIME%...
 
-rem Check if pg_dump exists
-pg_dump -h localhost -U postgres -d Bill -f "test.sql" -Z 3 > NUL 2>&1
-if ERRORLEVEL 1 (
-  echo Error: pg_dump not found. Please install it.
-  pause
-  exit /b 1
+REM Set PostgreSQL installation path
+SET PGPATH=C:\Program Files\PostgreSQL\15\bin
+
+REM Set PostgreSQL username
+SET PGUSER=postgres
+
+REM Set the password (optional, for security reasons it's better to omit this or use .pgpass)
+SET PGPASSWORD=Tiku2004###
+
+REM Set the database name you want to back up
+SET DBNAME=Bill
+
+REM Set the directory where the SQL dump file will be saved
+SET DUMPDIR=C:\Users\Siddhant Jain\Desktop
+
+REM Initialize the counter
+SET COUNTER=1
+
+REM Loop to find the next available filename
+:find_filename
+IF EXIST "%DUMPDIR%\new_bill_database_%COUNTER%.sql" (
+    SET /A COUNTER+=1
+    GOTO find_filename
 )
 
-rem Change directory (if needed)
-cd "Desktop"
+REM Set the path to the SQL dump file with the incremented number
+SET DUMPFILE=%DUMPDIR%\new_bill_database_%COUNTER%.sql
 
-echo Starting backup...
+REM Create the backup using pg_dump
+"%PGPATH%\pg_dump" -U %PGUSER% -d %DBNAME% > "%DUMPFILE%"
 
-rem Backup command
-pg_dump -h localhost -U postgres -d Bill -f "Desktop_%DATE%.sql" -Z 3
+REM Clean up environment variables (optional)
+SET PGPASSWORD=
+SET PGPATH=
+SET PGUSER=
+SET DBNAME=
+SET DUMPDIR=
+SET COUNTER=
 
-if ERRORLEVEL 1 (
-  echo Error: Backup failed. Check database connection, username, password, or permissions.
-  pause
-  exit /b 1
-)
-
-echo Backup successful!
+@echo Database backup complete! The dump file is saved as new_bill_database_%COUNTER%.sql
 pause

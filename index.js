@@ -1048,8 +1048,8 @@ app.post("/bill_filter",async(req,res)=>{
         }
 
         else if(req.body.date_from && req.body.date_to && !req.body.select_mcq){
-            date_from=req.body.date_from;
-            date_to=req.body.date_to;
+            let date_from=req.body.date_from;
+            let date_to=req.body.date_to;
             let bill_status=1;
             let bills=await db.query("SELECT * FROM bill_info where bill_date Between $1 and $2 order by bill_id desc;",[date_from,date_to]);
             let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
@@ -1057,9 +1057,9 @@ app.post("/bill_filter",async(req,res)=>{
         }
 
         else if(req.body.select_mcq && req.body.date_from && req.body.date_to){
-            select_mcq=req.body.select_mcq;
-            date_from=req.body.date_from;
-            date_to=req.body.date_to;
+            let select_mcq=req.body.select_mcq;
+            let date_from=req.body.date_from;
+            let date_to=req.body.date_to;
             let bill_status=1;
             let bills=await db.query("SELECT * FROM bill_info where bill_customer_id=$1 and bill_date Between $2 and $3 order by bill_id desc;",[select_mcq,date_from,date_to]);
             let all_customers=await db.query("SELECT * FROM customer_info order by customer_name;");
